@@ -47,7 +47,6 @@ function ctopt_db_track($id, $type) {
   $uid = $_COOKIE['ctopt_uid'];
   $sql = 'INSERT INTO ' . $wpdb->prefix . 'c2o_tracking(post_id, user_id, track_type) VALUES ('
          . $id . ",'" . $uid . "','" . $type . "')";
-  echo 'sql: ' . $sql;
   $wpdb->query($sql);
 }
 
