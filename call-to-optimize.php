@@ -36,5 +36,8 @@ function ctopt_enqueue_scripts() {
   wp_enqueue_script('jquery');
   wp_enqueue_script('ctopt', plugins_url('/call-to-optimize/js/ctopt.js'));
 }
-
+add_action('admin_enqueue_scripts', 'ctopt_admin_scripts');
+function ctopt_admin_scripts() {
+  wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
+}
 ?>

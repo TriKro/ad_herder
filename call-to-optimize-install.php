@@ -9,7 +9,8 @@ function ctopt_install() {
 	  id mediumint(9) NOT NULL AUTO_INCREMENT,
 	  track_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	  post_id int NOT NULL,
-	  user_id varchar(50) NOT NULL,
+	  user_id varchar(50) NULL,
+	  track_type varchar(10) NOT NULL,
 	  PRIMARY KEY  (id)
   );";
   require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

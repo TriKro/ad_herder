@@ -1,5 +1,5 @@
 <?php
-function ctopt_display($before_widget, $after_widget, $before_title, $after_title){
+function ctopt_display($before_widget, $after_widget, $before_title, $after_title, $show_title = FALSE){
 	//Get all calls to action
 	$args = array('post_type' => 'co-call');
 	$ctas = get_posts($args);
@@ -27,8 +27,10 @@ function ctopt_display($before_widget, $after_widget, $before_title, $after_titl
 	$track_url = $page . $symbol . 'ctopt_track=' . $cocall_id;
 	
 	$content = "";
-	$content .= $before_widget . '<div class="ctopt ctoptid-' . $cocall_id . '">'; 
-	$content .= $before_title . $title . $after_title;
+	$content .= $before_widget . '<div class="ctopt ctoptid-' . $cocall_id . '">';
+        if($show_title) {
+		$content .= $before_title . $title . $after_title;
+	}
 	$content .= $cta_content;
 	$content .= '</div><script type="text/javascript">jQuery(document).ready( function() {  jQuery(".ctopt a").click(function(e) { ctopt_track("' . $track_url . '"); }); });</script>';
     $content .= $after_widget;
