@@ -40,67 +40,56 @@ function callopt_reporting_menu() {
   add_submenu_page('edit.php?post_type=co-call', 'Call to Action reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
 }
 
-function callopt_reporting() { ?>
-<div>
+function callopt_reporting() { 
+  global $wpdb;
+  $reports = $wpdb->get_results("SELECT 
+    id, post_title, post_status, 
+    IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'ctopt_impressions'),0) as impressions, 
+    IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'ctopt_clicks'), 0) as clicks 
+    FROM wp_posts p WHERE post_type = 'co-call'");
+?><div>
 <h2>Calls to Action Engagement Reports</h2>
 <div id="report_div"></div>
+<div id="legend_div"></div>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart","table"]});
       google.setOnLoadCallback(drawChart);
+      var table, data;
       function drawChart() {
-        var data = new google.visualization.DataTable();
+        data = new google.visualization.DataTable();
         data.addColumn('string', 'Call id');
+        data.addColumn('string', 'Title');
+        data.addColumn('string', 'Status');
         data.addColumn('number', 'Impressions');
         data.addColumn('number', 'Clicks');
-        data.addRows(4);
-        data.setValue(0, 0, '1');
-        data.setValue(0, 1, 1000);
-        data.setValue(0, 2, 400);
-        data.setValue(1, 0, '2');
-        data.setValue(1, 1, 1170);
-        data.setValue(1, 2, 460);
-        data.setValue(2, 0, '5');
-        data.setValue(2, 1, 1660);
-        data.setValue(2, 2, 1120);
-        data.setValue(3, 0, '7');
-        data.setValue(3, 1, 430);
-        data.setValue(3, 2, 100);
+        data.addRows(<?php echo count($reports); ?>);
+        <?php 
+        $count = 0;
+        foreach($reports as $report) {
+        echo "data.setValue(" . $count . ", 0, '" . $report->id . "');\n";
+        echo "data.setValue(" . $count . ", 1, '" . $report->post_title . "');\n";
+        echo "data.setValue(" . $count . ", 2, '" . $report->post_status . "');\n";
+        echo "data.setValue(" . $count . ", 3,  " . $report->impressions . ");\n";
+        echo "data.setValue(" . $count . ", 4,  " . $report->clicks . ");\n";
+        $count++;
+        } ?>
 
+        var chartView = new google.visualization.DataView(data);
+        chartView.hideColumns([1,2]);
         var chart = new google.visualization.ColumnChart(document.getElementById('report_div'));
-        chart.draw(data, {width: 400, height: 240, title: 'Call engagement',
+        chart.draw(chartView, {width: 400, height: 240, title: 'Call engagement',
                           hAxis: {title: 'Call id', titleTextStyle: {color: 'red'}}
                          });
-      }
-</script>
-<div id="legend_div"></div>
-<script type='text/javascript'>
-      google.setOnLoadCallback(drawTable);
-      function drawTable() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Call id');
-        data.addColumn('string', 'Title');
-        data.addColumn('number', 'Impressions');
-        data.addColumn('number', 'Clicks');
-        data.addRows(4);
-        data.setCell(0, 0, 1);
-        data.setCell(0, 1, 'Mailing list signup');
-        data.setCell(0, 2, 1000);
-        data.setCell(0, 3, 400);
-        data.setCell(1, 0, 2);
-        data.setCell(1, 1, 'Twitter');
-        data.setCell(1, 2, 1170);
-        data.setCell(1, 3, 460);
-        data.setCell(2, 0, 5);
-        data.setCell(2, 1, 'Facebook');
-        data.setCell(2, 2, 1660);
-        data.setCell(2, 3, 1120);
-        data.setCell(3, 0, 7);
-        data.setCell(3, 1, 'Link');
-        data.setCell(3, 2, 430);
-        data.setCell(3, 3, 100);
-
-        var table = new google.visualization.Table(document.getElementById('legend_div'));
+        table = new google.visualization.Table(document.getElementById('legend_div'));
         table.draw(data, {});
+//	google.visualization.events.addListener(table, 'select', selectHandler);
+      }
+      function selectHandler() {
+        var selection = table.getSelection();
+        if(selection.length == 0)
+ 	  return;
+        var item = selection[0];
+        alert("select " + data.getFormattedValue(item.row, 0));
       }
 </script>
 </div>
