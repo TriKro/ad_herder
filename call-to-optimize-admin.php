@@ -41,16 +41,22 @@ function callopt_reporting_menu() {
 }
 
 function callopt_reporting() { 
-  global $wpdb;
-  $reports = $wpdb->get_results("SELECT 
-    id, post_title, post_status, 
-    IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'ctopt_impressions'),0) as impressions, 
-    IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'ctopt_clicks'), 0) as clicks 
-    FROM wp_posts p WHERE post_type = 'co-call'");
-?><div>
+  if(isset($_POST['ctopt_switchStatus'])) {
+    var callId = $_POST['ctopt_switchCallId'];
+    //TODO
+  }
+  $reports = CallToOptimizeGateway::findReports();
+?>
+<div>
 <h2>Calls to Action Engagement Reports</h2>
 <div id="report_div"></div>
 <div id="legend_div"></div>
+<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+  <p><label for="ctopt_switchCallId">Click on table or enter call id:</label>
+     <input type="text" name="ctopt_switchCallId" id="ctopt_switchCallId" />
+  </p>
+  <input type="submit" name="ctopt_switchStatus" value="Switch online/offline" />
+</form>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart","table"]});
       google.setOnLoadCallback(drawChart);
@@ -62,6 +68,7 @@ function callopt_reporting() {
         data.addColumn('string', 'Status');
         data.addColumn('number', 'Impressions');
         data.addColumn('number', 'Clicks');
+        data.addColumn('number', 'Conversion %');
         data.addRows(<?php echo count($reports); ?>);
         <?php 
         $count = 0;
@@ -71,25 +78,27 @@ function callopt_reporting() {
         echo "data.setValue(" . $count . ", 2, '" . $report->post_status . "');\n";
         echo "data.setValue(" . $count . ", 3,  " . $report->impressions . ");\n";
         echo "data.setValue(" . $count . ", 4,  " . $report->clicks . ");\n";
+        echo "data.setValue(" . $count . ", 5,  " . $report->conversion . ");\n";
         $count++;
         } ?>
 
         var chartView = new google.visualization.DataView(data);
-        chartView.hideColumns([1,2]);
+        chartView.hideColumns([1,2,5]);
         var chart = new google.visualization.ColumnChart(document.getElementById('report_div'));
         chart.draw(chartView, {width: 400, height: 240, title: 'Call engagement',
                           hAxis: {title: 'Call id', titleTextStyle: {color: 'red'}}
                          });
         table = new google.visualization.Table(document.getElementById('legend_div'));
         table.draw(data, {});
-//	google.visualization.events.addListener(table, 'select', selectHandler);
+	google.visualization.events.addListener(table, 'select', selectHandler);
       }
       function selectHandler() {
         var selection = table.getSelection();
         if(selection.length == 0)
  	  return;
         var item = selection[0];
-        alert("select " + data.getFormattedValue(item.row, 0));
+        var callId = data.getFormattedValue(item.row, 0);
+        jQuery('#ctopt_switchCallId').val(callId);
       }
 </script>
 </div>
