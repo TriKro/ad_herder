@@ -40,10 +40,30 @@ function callopt_reporting_menu() {
   add_submenu_page('edit.php?post_type=co-call', 'Call to Action reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
 }
 
-function callopt_reporting() { 
+function callopt_reporting() {
+  $message = ''; 
   if(isset($_POST['ctopt_switchStatus'])) {
-    var callId = $_POST['ctopt_switchCallId'];
-    //TODO
+    $call_id   = $_POST['ctopt_switchCallId'];
+    $call_post = get_post($call_id);
+    if($call_post && $call_post->post_type == 'co-call') {
+      $post_update       = array();
+      $post_update['ID'] = $call_id;
+      $post_changed      = false;
+      if($call_post->post_status == 'publish') {
+        $post_update['post_status'] = 'pending';
+        $post_changed = true;
+      } else if($call_post->post_status == 'pending') {
+        $post_update['post_status'] = 'publish';
+        $post_changed = true;
+      } else {
+        $message = 'The call id is not in status pending or publish, status was not updated.';
+      }
+      if($post_changed) {
+        wp_update_post($post_update);
+      }
+    } else {
+      $message = 'The call id you entered is incorrect.';
+    }
   }
   $reports = CallToOptimizeGateway::findReports();
 ?>
@@ -52,10 +72,13 @@ function callopt_reporting() {
 <div id="report_div"></div>
 <div id="legend_div"></div>
 <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+  <?php if($message) {
+    echo '<p>' . $message . '</p>';
+  } ?>
   <p><label for="ctopt_switchCallId">Click on table or enter call id:</label>
      <input type="text" name="ctopt_switchCallId" id="ctopt_switchCallId" />
+     <input type="submit" name="ctopt_switchStatus" value="Switch online/offline" />
   </p>
-  <input type="submit" name="ctopt_switchStatus" value="Switch online/offline" />
 </form>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart","table"]});
