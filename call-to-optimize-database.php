@@ -24,6 +24,22 @@ class CallToOptimizeGateway {
     ob_end_clean();  
   }
 
+  static function findOldTracking() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'c2o_tracking';
+    $sql = "SELECT * FROM " . $table_name . " 
+             WHERE track_time < DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH) 
+               AND track_type = 'impression'";
+    return $wpdb->get_results($sql);
+  }
+
+  static function delete($id) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'c2o_tracking';
+    $sql = "DELETE FROM " . $table_name . " WHERE ID = " . $id;
+    $wpdb->query($sql); 
+  }
+
   static function findReports() {
     global $wpdb;
     $reports = $wpdb->get_results("SELECT 

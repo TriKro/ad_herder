@@ -65,6 +65,12 @@ function callopt_reporting() {
       $message = 'The call id you entered is incorrect.';
     }
   }
+  if(isset($_POST['ctopt_cleanupOldTracking'])) {
+    $oldData = CallToOptimizeGateway::findOldTracking();
+    foreach($oldData as $data) {
+      CallToOptimizeGateway::delete($oldData->id);
+    }
+  }
   $reports = CallToOptimizeGateway::findReports();
 ?>
 <div>
@@ -79,6 +85,7 @@ function callopt_reporting() {
      <input type="text" name="ctopt_switchCallId" id="ctopt_switchCallId" />
      <input type="submit" name="ctopt_switchStatus" value="Switch online/offline" />
   </p>
+  <p><input type="submit" name="ctopt_cleanupOldTracking" value="Clean up old impression tracking data" /></p>
 </form>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart","table"]});
