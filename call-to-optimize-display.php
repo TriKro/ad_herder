@@ -1,12 +1,32 @@
 <?php
 function ctopt_display($before_widget, $after_widget, $before_title, $after_title, $show_title = FALSE){
-	//Get all calls to action
+        //Get all calls to action
 	$args = array('post_type' => 'co-call');
 	$ctas = get_posts($args);
 
 	if(count($ctas)>0){
-		$rand_key = array_rand($ctas,1);
-		$cta     = $ctas[$rand_key];
+		$uid = $_COOKIE['ctopt_uid'];
+		$weights = array();
+		foreach($ctas as $cta) {
+        		$converted = CallToOptimizeGateway::hasConverted($uid, $cta->ID);
+                        if($converted) {
+				$weights[] = 1;
+			} else {
+				$weights[] = 2;
+			}
+		}
+
+		$num = mt_rand(0, array_sum($weights));
+		$i = 0; $n = 0;
+		while($i < count($ctas)) {
+			$n += $weights[$i];
+			if($n >= $num) {
+				break;
+			}
+			$i++;
+                }
+
+		$cta     = $ctas[$i];
 
 		// http://codex.wordpress.org/Displaying_Posts_Using_a_Custom_Select_Query
 		setup_postdata($cta);
@@ -20,7 +40,7 @@ function ctopt_display($before_widget, $after_widget, $before_title, $after_titl
           $title = "No calls to action defined";
           $cta_content = "You still need to define calls before they can be displayed.";
         }
-	
+
 	$page      = get_option('siteurl');
 	$page      = get_page_link();
 	$symbol    = (preg_match('/\?/', $page)) ? '&' : '?';

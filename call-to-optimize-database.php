@@ -40,6 +40,21 @@ class CallToOptimizeGateway {
     $wpdb->query($sql); 
   }
 
+  /* Checks if the user has already clicked or converted on an add */
+  static function hasConverted($uid, $callid) {
+    if(!preg_match("/^ctopt-uid-/", $uid))
+      return false;
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'c2o_tracking';
+    $sql = "SELECT * FROM " . $table_name . "
+             WHERE user_id = '" . mysql_real_escape_string($uid) . "'
+               AND track_type = 'click'
+               AND post_id = " . $callid;
+    $conversions = $wpdb->get_results($sql);
+    return !empty($conversions);
+  }
+
   static function findReports() {
     global $wpdb;
     $reports = $wpdb->get_results("SELECT 
