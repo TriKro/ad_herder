@@ -20,11 +20,11 @@ Tracking Twitter conversions (this only tracks people who click on follow and we
 5. Find the ID of the call. You can do this on the reports page or in the URL of the edit page (/wp-admin/post.php?post=<call-id>)
 6. Below this, add the following:
 
-    <script type="text/javascript">
+    ```<script type="text/javascript">
     twttr.events.bind('follow', function(event) {
       ctopt_track("http://<blog-url>/<blog-path>/?ctopt_track=<call-id>");
     });
-    </script>
+    </script>```
 
     In the URL you'll need to replace the URL with your blog url and the call-id with the id of the call.
 7. Update and you're done
@@ -43,9 +43,9 @@ Mailchimp signup tracking (tracks every one who receives the signup configuratin
 5. A few lines lower you should see "if (resp.result=="success"){
 6. Just below this line add the tracking code:
 
-    if (resp.result=="success") {
+    ```if (resp.result=="success") {
       ctopt_track("http://<blog-url>/<blog-path>/?ctopt_track=<call-id>");
-      ...
+      ...```
 
 7. Save the changes
 
