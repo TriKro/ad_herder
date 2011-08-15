@@ -1,4 +1,25 @@
 <?php
+class CallToOptimizeOptions {
+  const OPTIONS_NAME = "CallToOptimizeOptions";
+
+  static function get() {
+    $options = array(
+      'normalWeight' => 2,
+      'convertedWeight' => 1,
+      'seenWeight' => 1,
+      'seenLimit' => 3
+    );
+    $dbOptions = get_option(self::OPTIONS_NAME);
+    if(!empty($dbOptions)) {
+      foreach($dbOptions as $key => $option) {
+        $options[$key] = $option;
+      }
+    }
+    update_option(self::OPTIONS_NAME, $options);
+    return $options;
+  }
+}
+
 class CallToOptimizeGateway {
   static function install() {
     global $wpdb;

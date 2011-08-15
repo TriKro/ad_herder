@@ -34,6 +34,7 @@ function ctopt_register_custom_post_type()
   register_post_type('co-call',$args);
 
   add_action('admin_menu', 'callopt_reporting_menu');
+  add_action('admin_menu', 'callopt_admin_menu');
 }
 
 function callopt_reporting_menu() {
@@ -131,6 +132,57 @@ function callopt_reporting() {
         jQuery('#ctopt_switchCallId').val(callId);
       }
 </script>
+</div>
+<?php }
+
+function callopt_admin_menu() {
+  add_submenu_page('edit.php?post_type=co-call', 'Call to Action admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
+}
+
+function callopt_admin() { 
+  $options = CallToOptimizeOptions::get();
+  if(isset($_POST['ctopt_updateOptions'])) {
+    if(isset($_POST['ctopt_normalWeight'])) {
+      $options['normalWeight'] = $_POST['ctopt_normalWeight'];
+    }
+    if(isset($_POST['ctopt_convertedWeight'])) {
+      $options['convertedWeight'] = $_POST['ctopt_convertedWeight'];
+    }
+    if(isset($_POST['ctopt_seenWeight'])) {
+      $options['seenWeight'] = $_POST['ctopt_seenWeight'];
+    }
+    if(isset($_POST['ctopt_seenLimit'])) {
+      $options['seenLimit'] = $_POST['ctopt_seenLimit'];
+    }
+    update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
+  }
+?>
+<h2>Calls to Action configuration</h2>
+<div class="wrap">
+  <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+    <h3>Call to action selection</h3>
+    <p>The different weights (numeric and &gt;0) with which to select the calls. A higher value means they are more likely to be displayed. It is not suggested to put any of them at 0, but it is possible (they won't be displayed)</p>
+    <table>
+      <tr>
+        <td><label for="ctopt_normalWeight">Normal/new Call</label></td>
+        <td><input name="ctopt_normalWeight" id="ctopt_normalWeight" type="text" value="<?php echo $options['normalWeight']; ?>" /></td>
+      </tr>
+      <tr>
+        <td><label for="ctopt_convertedWeight">Call for which a user has already converted</label></td>
+        <td><input name="ctopt_convertedWeight" id="ctopt_convertedWeight" type="text" value="<?php echo $options['convertedWeight']; ?>" /></td>
+      </tr>
+      <tr>
+        <td><label for="ctopt_seenWeight">Call that has been seen (see below)</label></td>
+        <td><input name="ctopt_seenWeight" id="ctopt_seenWeight" type="text" value="<?php echo $options['seenWeight']; ?>" /></td>
+      </tr>
+    </table>
+    <h3>Display limit</h3>
+    <p><label for="ctopt_seenLimit">Number of times a call is displayed before it is considered "seen"</label></p>
+    <p><input type="text" name="ctopt_seenLimit" id="ctopt_seenLimit" value="<?php echo $options['seenLimit']; ?>" /></p>
+    <div class="submit">
+      <input type="submit" name="ctopt_updateOptions" value="Update Settings" />
+    </div>
+  </form>
 </div>
 <?php }
 
