@@ -76,6 +76,19 @@ class CallToOptimizeGateway {
     return !empty($conversions);
   }
 
+  static function hasSeen($uid, $callid, $times) {
+    if(!preg_match("/^ctopt-uid-/", $uid))
+      return false;
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'c2o_tracking';
+    $sql = "SELECT COUNT(1) >= " . $times . " FROM " . $table_name . "
+             WHERE user_id = '" . mysql_real_escape_string($uid) . "'
+               AND track_type = 'impression'
+               AND post_id = " . $callid;
+    return $wpdb->get_var($sql); 
+  }
+
   static function findReports() {
     global $wpdb;
     $reports = $wpdb->get_results("SELECT 
