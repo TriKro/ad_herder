@@ -139,26 +139,50 @@ function callopt_admin_menu() {
   add_submenu_page('edit.php?post_type=co-call', 'Call to Action admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
 }
 
-function callopt_admin() { 
+function callopt_admin() {
+  $message = ''; 
   $options = CallToOptimizeOptions::get();
   if(isset($_POST['ctopt_updateOptions'])) {
     if(isset($_POST['ctopt_normalWeight'])) {
-      $options['normalWeight'] = $_POST['ctopt_normalWeight'];
+      $nw = $_POST['ctopt_normalWeight'];
+      if(preg_match('/^\d+$/', $nw)) {
+        $options['normalWeight'] = $nw;
+      } else {
+        $message = 'Weight must be a positive or zero number';
+      }
     }
     if(isset($_POST['ctopt_convertedWeight'])) {
-      $options['convertedWeight'] = $_POST['ctopt_convertedWeight'];
+      $cw = $_POST['ctopt_convertedWeight'];
+      if(preg_match('/^\d+$/', $cw)) {
+        $options['convertedWeight'] = $cw;
+      } else {
+        $message = 'Weight must be a positive or zero number';
+      }
     }
     if(isset($_POST['ctopt_seenWeight'])) {
-      $options['seenWeight'] = $_POST['ctopt_seenWeight'];
+      $sw = $_POST['ctopt_seenWeight'];
+      if(preg_match('/^\d+$/', $sw)) {
+        $options['seenWeight'] = $sw;
+      } else {
+        $message = 'Weight must be a positive or zero number';
+      }
     }
     if(isset($_POST['ctopt_seenLimit'])) {
-      $options['seenLimit'] = $_POST['ctopt_seenLimit'];
+      $sl = $_POST['ctopt_seenWeight'];
+      if(preg_match('/^\d+$/', $sl)) {
+        $options['seenLimit'] = $sl;
+      } else {
+        $message = 'Weight must be a positive or zero number';
+      }
     }
     update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
   }
 ?>
 <h2>Calls to Action configuration</h2>
 <div class="wrap">
+  <?php if($message) {
+    echo '<p>' . $message . '</p>';
+  } ?>
   <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
     <h3>Call to action selection</h3>
     <p>The different weights (numeric and &gt;0) with which to select the calls. A higher value means they are more likely to be displayed. It is not suggested to put any of them at 0, but it is possible (they won't be displayed)</p>
