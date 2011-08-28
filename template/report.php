@@ -1,5 +1,5 @@
 <div>
-<h2>Calls to Action Engagement Reports</h2>
+<h2>AdHerder Engagement Reports</h2>
 <?php if($message) {
   echo "<div id='setting-error-settings_updated' class='updated settings-error'><p><strong>" . $message . "</strong></p></div>";
 } ?>
@@ -39,7 +39,7 @@
       var table, data;
       function drawChart() {
         data = new google.visualization.DataTable();
-        data.addColumn('string', 'Call id');
+        data.addColumn('string', 'Ad id');
         data.addColumn('string', 'Title');
         data.addColumn('string', 'Status');
         data.addColumn('number', 'Impressions');
@@ -110,7 +110,7 @@
           'options'    : {
             'width'    : 400,
             'height'   : 240,
-            'title'    : 'Call engagement',
+            'title'    : 'Ad engagement',
           },
           'view'       : {
             'columns'  : [0, 3, 4]

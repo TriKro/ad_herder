@@ -41,8 +41,8 @@ function ctopt_display($before_widget, $after_widget, $before_title, $after_titl
   } else {
     // no calls yet
     $cocall_id   = -1;
-    $title       = "No calls to action defined";
-    $cta_content = "You still need to define calls before they can be displayed.";
+    $title       = "No Ads defined";
+    $cta_content = "You still need to define some Ads before they can be displayed.";
   }
 
 	$page      = get_option('siteurl');
