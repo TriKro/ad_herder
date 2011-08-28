@@ -1,6 +1,6 @@
 <?php
 class CallToOptimizeOptions {
-  const OPTIONS_NAME = "CallToOptimizeOptions";
+  const OPTIONS_NAME = "AdHerderOptions";
 
   static function get() {
     $options = array(

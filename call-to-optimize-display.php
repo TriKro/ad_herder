@@ -71,7 +71,7 @@ class CtoptWidget extends WP_Widget {
 	
     /** constructor */
     function CtoptWidget() {
-        parent::WP_Widget(false, $name = 'Call To Optimize widget');	
+        parent::WP_Widget(false, $name = 'AdHerder widget');	
     }
 
     /** @see WP_Widget::widget */

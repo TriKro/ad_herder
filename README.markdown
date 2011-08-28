@@ -2,7 +2,7 @@ Installation
 ============
 
 in your wp-content/plugins folder
-create folder "call-to-optimize"
+create folder "adherder"
 copy all files
 activate plugin
 add calls to action

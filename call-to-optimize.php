@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Call To Optimize
+Plugin Name: AdHerder
 Plugin URI: http://www.streamhead.com
 Description: Displays call to actions, tracks their performance and optimizes placement
 Version: 1.0
@@ -34,7 +34,7 @@ add_filter("manage_edit-co-call_columns", "ctopt_columns");
 add_action('wp_enqueue_scripts', 'ctopt_enqueue_scripts');
 function ctopt_enqueue_scripts() {
   wp_enqueue_script('jquery');
-  wp_enqueue_script('ctopt', plugins_url('/call-to-optimize/js/ctopt.js'));
+  wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'));
 }
 add_action('admin_enqueue_scripts', 'ctopt_admin_scripts');
 function ctopt_admin_scripts() {

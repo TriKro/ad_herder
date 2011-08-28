@@ -38,7 +38,7 @@ function ctopt_register_custom_post_type()
 }
 
 function callopt_reporting_menu() {
-  add_submenu_page('edit.php?post_type=co-call', 'Call to Action reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
+  add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
 }
 
 function callopt_reporting() {
@@ -132,7 +132,7 @@ function callopt_admin() {
     update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
   }
 ?>
-<h2>Calls to Action configuration</h2>
+<h2>AdHerder configuration</h2>
 <div class="wrap">
   <?php if($message) {
     echo '<p>' . $message . '</p>';
