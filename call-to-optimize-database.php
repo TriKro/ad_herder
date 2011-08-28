@@ -61,6 +61,13 @@ class CallToOptimizeGateway {
     $wpdb->query($sql); 
   }
 
+  static function deleteForPost($postId) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'c2o_tracking';
+    $sql = "DELETE FROM " . $table_name . " WHERE POST_ID = " . $postId;
+    $wpdb->query($sql); 
+  }
+
   /* Checks if the user has already clicked or converted on an add */
   static function hasConverted($uid, $callid) {
     if(!preg_match("/^ctopt-uid-/", $uid))

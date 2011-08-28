@@ -66,74 +66,28 @@ function callopt_reporting() {
       $message = 'The call id you entered is incorrect.';
     }
   }
+  if(isset($_POST['ctopt_clearHistory'])) {
+    $call_id   = $_POST['ctopt_clearCallId'];
+    $call_post = get_post($call_id);
+    if($call_post && $call_post->post_type == 'co-call') {
+      CallToOptimizeGateway::deleteForPost($call_id);
+      update_post_meta($call_id, 'ctopt_impressions', 0);
+      update_post_meta($call_id, 'ctopt_clicks', 0);
+      $message = 'Cleared all data for call with id ' . $call_id;
+    } else {
+      $message = 'Id ' . $call_id . ' is not a valid call to action id'; 
+    }
+  }
   if(isset($_POST['ctopt_cleanupOldTracking'])) {
     $oldData = CallToOptimizeGateway::findOldTracking();
     foreach($oldData as $data) {
       CallToOptimizeGateway::delete($oldData->id);
     }
+    $message = 'Older impression data cleared';
   }
   $reports = CallToOptimizeGateway::findReports();
-?>
-<div>
-<h2>Calls to Action Engagement Reports</h2>
-<div id="report_div"></div>
-<div id="legend_div"></div>
-<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-  <?php if($message) {
-    echo '<p>' . $message . '</p>';
-  } ?>
-  <p><label for="ctopt_switchCallId">Click on table or enter call id:</label>
-     <input type="text" name="ctopt_switchCallId" id="ctopt_switchCallId" />
-     <input type="submit" name="ctopt_switchStatus" value="Switch online/offline" />
-  </p>
-  <p><input type="submit" name="ctopt_cleanupOldTracking" value="Clean up old impression tracking data" /></p>
-</form>
-<script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart","table"]});
-      google.setOnLoadCallback(drawChart);
-      var table, data;
-      function drawChart() {
-        data = new google.visualization.DataTable();
-        data.addColumn('string', 'Call id');
-        data.addColumn('string', 'Title');
-        data.addColumn('string', 'Status');
-        data.addColumn('number', 'Impressions');
-        data.addColumn('number', 'Clicks');
-        data.addColumn('number', 'Conversion %');
-        data.addRows(<?php echo count($reports); ?>);
-        <?php 
-        $count = 0;
-        foreach($reports as $report) {
-        echo "data.setValue(" . $count . ", 0, '" . $report->id . "');\n";
-        echo "data.setValue(" . $count . ", 1, '" . $report->post_title . "');\n";
-        echo "data.setValue(" . $count . ", 2, '" . $report->post_status . "');\n";
-        echo "data.setValue(" . $count . ", 3,  " . $report->impressions . ");\n";
-        echo "data.setValue(" . $count . ", 4,  " . $report->clicks . ");\n";
-        echo "data.setValue(" . $count . ", 5,  " . $report->conversion . ");\n";
-        $count++;
-        } ?>
-
-        var chartView = new google.visualization.DataView(data);
-        chartView.hideColumns([1,2,5]);
-        var chart = new google.visualization.ColumnChart(document.getElementById('report_div'));
-        chart.draw(chartView, {width: 400, height: 240, title: 'Call engagement',
-                          hAxis: {title: 'Call id', titleTextStyle: {color: 'red'}}
-                         });
-        table = new google.visualization.Table(document.getElementById('legend_div'));
-        table.draw(data, {});
-	google.visualization.events.addListener(table, 'select', selectHandler);
-      }
-      function selectHandler() {
-        var selection = table.getSelection();
-        if(selection.length == 0)
- 	  return;
-        var item = selection[0];
-        var callId = data.getFormattedValue(item.row, 0);
-        jQuery('#ctopt_switchCallId').val(callId);
-      }
-</script>
-</div>
-<?php }
+  include('template/report.php');
+}
 
 function callopt_admin_menu() {
   add_submenu_page('edit.php?post_type=co-call', 'Call to Action admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
