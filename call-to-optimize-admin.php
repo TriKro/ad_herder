@@ -129,6 +129,9 @@ function callopt_admin() {
         $message = 'Weight must be a positive or zero number';
       }
     }
+    if(isset($_POST['ctopt_trackLoggedIn'])) {
+      $options['trackLoggedIn'] = $_POST['ctopt_trackLoggedIn'];
+    }
     update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
   }
 ?>
@@ -157,6 +160,12 @@ function callopt_admin() {
     <h3>Display limit</h3>
     <p><label for="ctopt_seenLimit">Number of times an ad is displayed before it is considered "seen"</label></p>
     <p><input type="text" name="ctopt_seenLimit" id="ctopt_seenLimit" value="<?php echo $options['seenLimit']; ?>" /></p>
+
+    <h3>Track logged in users?</h3>
+    <p>Selecting "No" will not store tracking data or impressions/click counts for users that are logged in.</p>
+<p><label for="ctopt_trackLoggedIn_yes"><input type="radio" id="ctopt_trackLoggedIn_yes" name="ctopt_trackLoggedIn" value="true" <?php if ($options['trackLoggedIn'] == "true") { echo 'checked="checked"'; }?> /> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="ctopt_trackLoggedIn_no"><input type="radio" id="ctopt_trackLoggedIn_no" name="ctopt_trackLoggedIn" value="false" <?php if ($options['trackLoggedIn'] == "false") { echo 'checked="checked"'; }?>/> No</label></p>
+
+
     <div class="submit">
       <input type="submit" name="ctopt_updateOptions" value="Update Settings" />
     </div>

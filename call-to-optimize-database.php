@@ -7,7 +7,8 @@ class CallToOptimizeOptions {
       'normalWeight' => 2,
       'convertedWeight' => 1,
       'seenWeight' => 1,
-      'seenLimit' => 3
+      'seenLimit' => 3,
+      'trackLoggedIn' => 'true'
     );
     $dbOptions = get_option(self::OPTIONS_NAME);
     if(!empty($dbOptions)) {

@@ -76,3 +76,11 @@ In order to track Facebook likes, you need to use the XFBML version of the like 
         </script>
 
 4. Publish and you're done
+
+Testing
+=======
+
+It is possible to override the automatic selection of ads. Add a `ctopt_ad` parameter to the request. For instance, show the add with id 10:
+
+    http://grasshopperherder.com/?ctopt_ad=10
+
