@@ -122,7 +122,7 @@ function callopt_admin() {
       }
     }
     if(isset($_POST['ctopt_seenLimit'])) {
-      $sl = $_POST['ctopt_seenWeight'];
+      $sl = $_POST['ctopt_seenLimit'];
       if(preg_match('/^\d+$/', $sl)) {
         $options['seenLimit'] = $sl;
       } else {
