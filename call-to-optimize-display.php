@@ -11,7 +11,9 @@ function ctopt_display($before_widget, $after_widget, $before_title, $after_titl
   }
   if(!$cta) {
     //Get all calls to action
-    $args    = array('post_type' => 'co-call');
+    $args    = array('post_type' => 'co-call', 
+                     'post_status' => 'publish',
+                     'numberposts' => -1);
     $ctas    = get_posts($args);
     $options = CallToOptimizeOptions::get();
 
