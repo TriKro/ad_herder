@@ -1,16 +1,4 @@
 <?php
-
-function ctopt_track() {
-  if ($qs = $_SERVER['REQUEST_URI']) {
-    $pos = strpos($qs, 'ctopt_track');
-    if (!(false === $pos)) {
-      $cocall_id = $_GET['ctopt_track'];
-      ctopt_register_click($cocall_id);
-      exit(1);
-    }
-  } 
-}
-
 function ctopt_track_logged_in() {
   if(!is_user_logged_in()) {
     return true; // always track users that are not logged in
@@ -20,7 +8,7 @@ function ctopt_track_logged_in() {
 }
 
 function ctopt_register_impression($id) {
-	if (!is_admin() && ctopt_track_logged_in()) {
+	if (ctopt_track_logged_in()) {
 		if(get_post_custom_keys($id)&&in_array('ctopt_impressions',get_post_custom_keys($id))){
 			$ctopt_impressions = get_post_meta($id,'ctopt_impressions',true);
 		}
@@ -35,7 +23,7 @@ function ctopt_register_impression($id) {
 }
 
 function ctopt_register_click($id) {
-	if (!is_admin() && ctopt_track_logged_in()) {
+	if (ctopt_track_logged_in()) {
 		if(get_post_custom_keys($id)&&in_array('ctopt_clicks',get_post_custom_keys($id))){
 			$ctopt_clicks = get_post_meta($id,'ctopt_clicks',true);
 		}

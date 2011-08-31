@@ -11,8 +11,30 @@ jQuery(document).ready( function() {
   }
 });
 
-function ctopt_track(track_url) {
-  jQuery.get(track_url);
+function ctopt_track(callID) {
+  var oldPattern = /^http.*ctopt_track=([0-9]+)/;
+  var match      = oldPattern.exec(callID);
+  if(match != null) {
+    //using the old style url
+    callID = match[1];
+  }
+  jQuery.post(
+    AdHerder.ajaxurl,
+    {
+      action : 'ctopt-track',
+      callID : callID
+    }
+  );
+}
+
+function ctopt_impression(callID) {
+  jQuery.post(
+    AdHerder.ajaxurl,
+    {
+      action : 'ctopt-impression',
+      callID : callID
+    }
+  );
 }
 
 /**

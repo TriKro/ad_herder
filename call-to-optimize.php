@@ -12,6 +12,7 @@ require_once(plugin_dir_path(__FILE__)."/call-to-optimize-admin.php");
 require_once(plugin_dir_path(__FILE__)."/call-to-optimize-database.php");
 require_once(plugin_dir_path(__FILE__)."/call-to-optimize-display.php");
 require_once(plugin_dir_path(__FILE__)."/call-to-optimize-functions.php");
+require_once(plugin_dir_path(__FILE__)."/call-to-optimize-ajax.php");
 
 // register widget
 add_action('widgets_init', create_function('', 'return register_widget("CtoptWidget");'));
@@ -19,8 +20,6 @@ add_action('widgets_init', create_function('', 'return register_widget("CtoptWid
 // register custom post type
 add_action('init', 'ctopt_register_custom_post_type');
 
-// click tracking
-add_action('init', 'ctopt_track', 11);
 // install click tracking database table on activation
 register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
 
@@ -32,10 +31,10 @@ add_filter("manage_edit-co-call_columns", "ctopt_columns");
 
 // add JavaScript
 add_action('wp_enqueue_scripts', 'ctopt_enqueue_scripts');
-function ctopt_enqueue_scripts() {
-  wp_enqueue_script('jquery');
-  wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'));
-}
+add_action('wp_ajax_nopriv_ctopt-track', 'ctopt_ajax_register_track');
+add_action('wp_ajax_ctopt-track', 'ctopt_ajax_register_track');
+add_action('wp_ajax_nopriv_ctopt-impression', 'ctopt_ajax_register_impression');
+add_action('wp_ajax_ctopt-impression', 'ctopt_ajax_register_impression');
 add_action('admin_enqueue_scripts', 'ctopt_admin_scripts');
 function ctopt_admin_scripts() {
   wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
