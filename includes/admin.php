@@ -86,7 +86,7 @@ function callopt_reporting() {
     $message = 'Older impression data cleared';
   }
   $reports = CallToOptimizeGateway::findReports();
-  include('template/report.php');
+  include(dirname(__FILE__).'/../template/report.php');
 }
 
 function callopt_admin_menu() {
