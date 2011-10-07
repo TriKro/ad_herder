@@ -8,7 +8,7 @@ Author: Peter Backx
 Author URI: http://www.streamhead.com
 */
 if ( is_admin() ) {
-  require_once( dirname(__FILE__).'/includes/admin.php' );
+  require_once(dirname(__FILE__).'/includes/admin.php' );
   // register custom post type
   add_action('init', 'ctopt_register_custom_post_type');
   // columns in admin interface
@@ -22,18 +22,16 @@ if ( is_admin() ) {
     wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
   }
 }
-require_once(plugin_dir_path(__FILE__)."/adherder-database.php");
-require_once(plugin_dir_path(__FILE__)."/adherder-display.php");
-require_once(plugin_dir_path(__FILE__)."/adherder-functions.php");
-require_once(plugin_dir_path(__FILE__)."/adherder-ajax.php");
+require_once(plugin_dir_path(__FILE__)."/includes/database.php");
+require_once(plugin_dir_path(__FILE__)."/includes/display.php");
+require_once(plugin_dir_path(__FILE__)."/includes/functions.php");
+require_once(plugin_dir_path(__FILE__)."/includes/ajax.php");
 
 // register widget
 add_action('widgets_init', create_function('', 'return register_widget("CtoptWidget");'));
 
-
 // install click tracking database table on activation
 register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
-
 
 // add JavaScript
 add_action('wp_enqueue_scripts', 'ctopt_enqueue_scripts');
