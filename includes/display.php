@@ -69,7 +69,6 @@ function ctopt_display($before_widget, $after_widget, $before_title, $after_titl
 		$content .= $before_title . $title . $after_title;
 	}
 	$content .= $cta_content;
-	$content .= '</div><script type="text/javascript">jQuery(document).ready( function() { ctopt_impression("' . $cocall_id . '"); jQuery(".ctopt a").click(function(e) { ctopt_track("' . $cocall_id . '"); }); });</script>';
     $content .= $after_widget;
 	
 	return $content;

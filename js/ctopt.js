@@ -9,6 +9,7 @@ jQuery(document).ready( function() {
       { expires: 31, path: '/' }
     );
   }
+  adherder_track();
 });
 
 function ctopt_track(callID) {
@@ -35,6 +36,25 @@ function ctopt_impression(callID) {
       callID : callID
     }
   );
+}
+
+function adherder_track() {
+	jQuery('.ctopt').each(function(ad) {
+		var classList = this.className.split(/\s+/);
+		var adId;
+		for(var i = 0; i < classList.length; i++) {
+			var className = classList[i];
+			if(className.lastIndexOf('ctoptid', 0) === 0) {
+				adId = className.slice(className.lastIndexOf('-')+1);
+				ctopt_impression(adId); 
+			}
+		}
+		if(adId) {
+			jQuery(this).find('a').click(function(e) { 
+				ctopt_track(adId); 
+			});
+		}
+	});
 }
 
 /**
