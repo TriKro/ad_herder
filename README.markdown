@@ -79,5 +79,5 @@ Testing
 
 It is possible to override the automatic selection of ads. Add a `ctopt_ad` parameter to the request. For instance, show the add with id 10:
 
-    http://grasshopperherder.com/?ctopt_ad=10
+    http://grasshopperherder.com/?adherder_ad=10
 

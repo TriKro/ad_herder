@@ -8,7 +8,8 @@ class CallToOptimizeOptions {
       'convertedWeight' => 1,
       'seenWeight' => 1,
       'seenLimit' => 3,
-      'trackLoggedIn' => 'true'
+      'trackLoggedIn' => 'true',
+      'ajaxWidget' => 'false'
     );
     $dbOptions = get_option(self::OPTIONS_NAME);
     if(!empty($dbOptions)) {

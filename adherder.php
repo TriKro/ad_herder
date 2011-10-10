@@ -38,5 +38,5 @@ if ( is_admin() ) {
 register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
 
 // add Ajax action to the public blog
-add_action( 'template_redirect', 'adherder_ajax_init' );
+adherder_ajax_init();
 ?>

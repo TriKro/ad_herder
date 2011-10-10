@@ -1,10 +1,10 @@
 <?php
-function ctopt_display($before_widget, $after_widget, $before_title, $after_title, $show_title = FALSE){
+function adherder_display($before_widget, $after_widget, $before_title, $after_title, $show_title = FALSE){
   //override display via request parameter
   $qs    = $_SERVER['REQUEST_URI'];
-  $qsPos = strpos($qs, 'ctopt_ad');
+  $qsPos = strpos($qs, 'adherder_ad');
   if(!(false === $qsPos)) {
-    $cocall_id   = $_GET['ctopt_ad'];
+    $cocall_id   = $_GET['adherder_ad'];
     $cta         = get_post($cocall_id);
     $title       = $cta->post_title; 
     $cta_content = $cta->post_content;
@@ -87,7 +87,12 @@ class CtoptWidget extends WP_Widget {
     /** @see WP_Widget::widget */
     function widget($args, $instance) {	
 		extract( $args );
-        echo ctopt_display($before_widget, $after_widget, $before_title, $after_title);   
+		$options = CallToOptimizeOptions::get();
+		if($options['ajaxWidget'] == 'true') {
+			echo 'ajax over here';
+		} else {
+			echo adherder_display($before_widget, $after_widget, $before_title, $after_title);   
+		}
     }
 
     /** @see WP_Widget::update */

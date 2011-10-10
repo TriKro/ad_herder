@@ -118,6 +118,9 @@ function callopt_admin() {
     if(isset($_POST['ctopt_trackLoggedIn'])) {
       $options['trackLoggedIn'] = $_POST['ctopt_trackLoggedIn'];
     }
+    if(isset($_POST['ctopt_ajaxWidget'])) {
+      $options['ajaxWidget'] = $_POST['ctopt_ajaxWidget'];
+    }
     update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
   }
   include(plugin_dir_path(__FILE__).'/../template/options.php');
