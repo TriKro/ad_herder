@@ -1,7 +1,7 @@
 <?php
 function adherder_client_scripts() {
-	wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'), array('jquery'), ADHERDER_VERSION_NUM);
-	wp_localize_script( 'ctopt', 'AdHerder', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+	wp_enqueue_script('adherder', plugins_url('/adherder/js/adherder.js'), array('jquery'), ADHERDER_VERSION_NUM);
+	wp_localize_script( 'adherder', 'AdHerder', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 
 function adherder_ajax_init() {
