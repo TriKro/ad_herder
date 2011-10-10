@@ -9,7 +9,20 @@ jQuery(document).ready( function() {
       { expires: 31, path: '/' }
     );
   }
-  adherder_track();
+  jQuery('.adherder_placeholder').each(function(ad) {
+	  var widget = jQuery(this).parent();
+	  jQuery.post(
+		AdHerder.ajaxurl,
+		{
+			action : 'adherder_display_ajax'
+		},
+		function(data) {
+			widget.html(data);
+			adherder_track_ad(widget.find('.ctopt'));
+		}
+	  );
+  });
+  adherder_track_ads();
 });
 
 /**
@@ -45,23 +58,27 @@ function adherder_track_impression(adId) {
 	);
 }
 
-function adherder_track() {
+function adherder_track_ads() {
 	jQuery('.ctopt').each(function(ad) {
-		var classList = this.className.split(/\s+/);
-		var adId;
-		for(var i = 0; i < classList.length; i++) {
-			var className = classList[i];
-			if(className.lastIndexOf('ctoptid', 0) === 0) {
-				adId = className.slice(className.lastIndexOf('-')+1);
-				adherder_track_impression(adId); 
-			}
-		}
-		if(adId) {
-			jQuery(this).find('a').click(function(e) { 
-				adherder_track_conversion(adId); 
-			});
-		}
+		adherder_track_ad(jQuery(this));
 	});
+}
+
+function adherder_track_ad(ad) {
+	var classList = ad.attr('class').split(/\s+/);
+	var adId;
+	for(var i = 0; i < classList.length; i++) {
+		var className = classList[i];
+		if(className.lastIndexOf('ctoptid', 0) === 0) {
+			adId = className.slice(className.lastIndexOf('-')+1);
+			adherder_track_impression(adId); 
+		}
+	}
+	if(adId) {
+		ad.find('a').click(function(e) { 
+			adherder_track_conversion(adId); 
+		});
+	}
 }
 
 /**

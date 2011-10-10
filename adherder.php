@@ -26,7 +26,7 @@ require_once(plugin_dir_path(__FILE__)."/includes/ajax.php");
 add_action( 'init', 'adherder_register_post_type');
 
 // register widget
-add_action('widgets_init', create_function('', 'return register_widget("CtoptWidget");'));
+add_action('widgets_init', create_function('', 'return register_widget("Adherder_Widget");'));
 
 // add the administrative functions only when in the admin interface
 if ( is_admin() ) {

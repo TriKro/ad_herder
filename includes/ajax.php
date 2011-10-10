@@ -10,6 +10,8 @@ function adherder_ajax_init() {
 	add_action('wp_ajax_adherder_track_conversion', 'adherder_track_conversion');
 	add_action('wp_ajax_nopriv_adherder_track_impression', 'adherder_track_impression');
 	add_action('wp_ajax_adherder_track_impression', 'adherder_track_impression');
+	add_action('wp_ajax_nopriv_adherder_display_ajax', 'adherder_display_ajax');
+	add_action('wp_ajax_adherder_display_ajax', 'adherder_display_ajax');
 }
 
 function adherder_track_conversion() {
@@ -19,7 +21,7 @@ function adherder_track_conversion() {
   $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
   header( "Content-Type: application/json" );
   echo $response;
-  exit;
+  die();
 }
 
 function adherder_track_impression() {
@@ -29,6 +31,11 @@ function adherder_track_impression() {
   $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
   header( "Content-Type: application/json" );
   echo $response;
-  exit; 
+  die(); 
+}
+
+function adherder_display_ajax() {
+	echo adherder_display();
+	die();
 }
 ?>

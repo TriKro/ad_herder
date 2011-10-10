@@ -1,12 +1,11 @@
 <?php
-function adherder_display($before_widget, $after_widget, $before_title, $after_title, $show_title = FALSE){
+function adherder_display(){
   //override display via request parameter
   $qs    = $_SERVER['REQUEST_URI'];
   $qsPos = strpos($qs, 'adherder_ad');
   if(!(false === $qsPos)) {
     $cocall_id   = $_GET['adherder_ad'];
     $cta         = get_post($cocall_id);
-    $title       = $cta->post_title; 
     $cta_content = $cta->post_content;
   }
   if(!$cta) {
@@ -48,39 +47,24 @@ function adherder_display($before_widget, $after_widget, $before_title, $after_t
       setup_postdata($cta);
 		
       $cocall_id   = $cta->ID; 
-      $title       = $cta->post_title; 
       $cta_content = $cta->post_content;
-    } else {
-      // no calls yet
-      $cocall_id   = -1;
-      $title       = "No Ads defined";
-      $cta_content = "You still need to define some Ads before they can be displayed.";
-    }
-  }
-
-	$page      = get_option('siteurl');
-	$page      = get_page_link();
-	$symbol    = (preg_match('/\?/', $page)) ? '&' : '?';
-	$track_url = $page . $symbol . 'ctopt_track=' . $cocall_id;
-	
-	$content = "";
-	$content .= $before_widget . '<div class="ctopt ctoptid-' . $cocall_id . '">';
-        if($show_title) {
-		$content .= $before_title . $title . $after_title;
+		} else {
+			// no calls yet
+			$cocall_id   = -1;
+			$cta_content = "You still need to define some Ads before they can be displayed.";
+		}
 	}
-	$content .= $cta_content;
-    $content .= $after_widget;
-	
-	return $content;
+
+	return '<div class="ctopt ctoptid-' . $cocall_id . '">' . $cta_content . '</div>';
 }
 
 //=============================================
 // Create 'Call to Action' Widget
 //=============================================
-class CtoptWidget extends WP_Widget {
+class Adherder_Widget extends WP_Widget {
 	
     /** constructor */
-    function CtoptWidget() {
+    function Adherder_Widget() {
         parent::WP_Widget(false, $name = 'AdHerder widget');	
     }
 
@@ -88,11 +72,13 @@ class CtoptWidget extends WP_Widget {
     function widget($args, $instance) {	
 		extract( $args );
 		$options = CallToOptimizeOptions::get();
+		echo $before_widget;
 		if($options['ajaxWidget'] == 'true') {
-			echo 'ajax over here';
+			echo '<div class="adherder_placeholder">loading...</div>';
 		} else {
-			echo adherder_display($before_widget, $after_widget, $before_title, $after_title);   
+			echo adherder_display();
 		}
+		echo $after_widget;
     }
 
     /** @see WP_Widget::update */
