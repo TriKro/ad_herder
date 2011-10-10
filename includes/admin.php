@@ -9,7 +9,7 @@
 function adherder_admin_setup() 
 {
 	// add options and reporting menu items.
-	add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
+	$reportsMenu = add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
 	add_submenu_page('edit.php?post_type=co-call', 'AdHerder admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
 
 	// customize the columns in the admin interface
@@ -18,15 +18,15 @@ function adherder_admin_setup()
 	add_action('manage_posts_custom_column', 'ctopt_column');
 	add_filter('manage_edit-co-call_columns', 'ctopt_columns');
 
-	// add JavaScript
-	add_action('admin_enqueue_scripts', 'adherder_admin_scripts');
+	// add JavaScript for reporting only
+	add_action('load-'.$reportsMenu, 'adherder_report_scripts');
 }
 
 /**
  * Enqueue the JavaScript used by the admin interface
  * 
  */
-function adherder_admin_scripts() {
+function adherder_report_scripts() {
 	// the google chart API is used for reporting
 	wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
 }
