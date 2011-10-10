@@ -12,30 +12,37 @@ jQuery(document).ready( function() {
   adherder_track();
 });
 
+/**
+ * old backwards compatibility code
+ */
 function ctopt_track(callID) {
-  var oldPattern = /^http.*ctopt_track=([0-9]+)/;
-  var match      = oldPattern.exec(callID);
-  if(match != null) {
-    //using the old style url
-    callID = match[1];
-  }
-  jQuery.post(
-    AdHerder.ajaxurl,
-    {
-      action : 'ctopt-track',
-      callID : callID
-    }
-  );
+	var oldPattern = /^http.*ctopt_track=([0-9]+)/;
+	var match      = oldPattern.exec(callID);
+	if(match != null) {
+		//using the old style url
+		callID = match[1];
+	}
+	adherder_track_conversion(callID);
 }
 
-function ctopt_impression(callID) {
-  jQuery.post(
-    AdHerder.ajaxurl,
-    {
-      action : 'ctopt-impression',
-      callID : callID
-    }
-  );
+function adherder_track_conversion(adId) {
+	jQuery.post(
+		AdHerder.ajaxurl,
+		{
+			action : 'adherder_track_conversion',
+			ad_id  : adId
+		}
+	);
+}
+
+function adherder_track_impression(adId) {
+	jQuery.post(
+		AdHerder.ajaxurl,
+		{
+			action : 'adherder_track_impression',
+			ad_id  : adId
+		}
+	);
 }
 
 function adherder_track() {
@@ -46,12 +53,12 @@ function adherder_track() {
 			var className = classList[i];
 			if(className.lastIndexOf('ctoptid', 0) === 0) {
 				adId = className.slice(className.lastIndexOf('-')+1);
-				ctopt_impression(adId); 
+				adherder_track_impression(adId); 
 			}
 		}
 		if(adId) {
 			jQuery(this).find('a').click(function(e) { 
-				ctopt_track(adId); 
+				adherder_track_conversion(adId); 
 			});
 		}
 	});

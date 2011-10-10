@@ -41,10 +41,6 @@ function adherder_plugin_setup() {
 	register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
 
 	// add JavaScript files and Ajax methods
-	add_action('wp_enqueue_scripts', 'adherder_client_scripts');
-	add_action('wp_ajax_nopriv_ctopt-track', 'ctopt_ajax_register_track');
-	add_action('wp_ajax_ctopt-track', 'ctopt_ajax_register_track');
-	add_action('wp_ajax_nopriv_ctopt-impression', 'ctopt_ajax_register_impression');
-	add_action('wp_ajax_ctopt-impression', 'ctopt_ajax_register_impression');
+	adherder_ajax_init();
 }
 ?>

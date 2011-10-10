@@ -1,24 +1,32 @@
 <?php
 function adherder_client_scripts() {
-  wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'), array('jquery'), ADHERDER_VERSION_NUM);
-  wp_localize_script( 'ctopt', 'AdHerder', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+	wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'), array('jquery'), ADHERDER_VERSION_NUM);
+	wp_localize_script( 'ctopt', 'AdHerder', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 
-function ctopt_ajax_register_track() {
-  $callID = $_POST['callID'];
+function adherder_ajax_init() {
+	add_action('wp_enqueue_scripts', 'adherder_client_scripts');
+	add_action('wp_ajax_nopriv_adherder_track_conversion', 'adherder_track_conversion');
+	add_action('wp_ajax_adherder_track_conversion', 'adherder_track_conversion');
+	add_action('wp_ajax_nopriv_adherder_track_impression', 'adherder_track_impression');
+	add_action('wp_ajax_adherder_track_impression', 'adherder_track_impression');
+}
+
+function adherder_track_conversion() {
+  $callID = $_POST['ad_id'];
   ctopt_register_click($callID);
 
-  $response = json_encode( array( 'callID' => $callID, 'success' => true ) );
+  $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
   header( "Content-Type: application/json" );
   echo $response;
   exit;
 }
 
-function ctopt_ajax_register_impression() {
-  $callID = $_POST['callID'];
+function adherder_track_impression() {
+  $callID = $_POST['ad_id'];
   ctopt_register_impression($callID);
 
-  $response = json_encode( array( 'callID' => $callID, 'success' => true ) );
+  $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
   header( "Content-Type: application/json" );
   echo $response;
   exit; 

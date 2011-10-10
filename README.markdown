@@ -13,7 +13,7 @@ Integration
 
 By default, the plugin will monitor clicks on "a href" HTML links. So to monitor the conversion on those, you don't need to do anything. If you want to monitor different, more complicated widgets, you'll need to do some work yourself.
 
-A conversion is monitored by calling (in JavaScript) the `ctopt_track()` function with as argument the ID of the ad.
+A conversion is monitored by calling (in JavaScript) the `adherder_track_conversion()` function with as argument the ID of the ad.
 
 To find the ID of the call you can open the reports page and check the table. The first column shows the id. Another method is to edit the call and look at the url: `/wp-admin/post.php?post=7&action=edit`. In this case, the id is 7.
 
@@ -30,7 +30,7 @@ Tracking Twitter conversions (this only tracks people who click on follow and we
 
         <script type="text/javascript">
         twttr.events.bind('follow', function(event) {
-          ctopt_track(<call-id>);
+          adherder_track_conversion(<call-id>);
         });
         </script>
 
@@ -52,7 +52,7 @@ Mailchimp signup tracking (tracks every one who receives the signup configuratin
 6. Just below this line add the tracking code:
 
         if (resp.result=="success") {
-          ctopt_track(<call-id>);
+          adherder_track_conversion(<call-id>);
           ...
 
 7. Save the changes
@@ -68,7 +68,7 @@ In order to track Facebook likes, you need to use the XFBML version of the like 
 
         <script type="text/javascript">
         FB.Event.subscribe('edge.create', function(response) {
-          ctopt_track(<call-id>);
+          adherder_track_conversion(<call-id>);
         });
         </script>
 
