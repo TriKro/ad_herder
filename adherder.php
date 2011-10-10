@@ -11,6 +11,14 @@ Author URI: http://www.streamhead.com
 add_action( 'plugins_loaded', 'adherder_plugin_setup' );
 
 function adherder_plugin_setup() {
+	if ( !defined('ADHERDER_VERSION') ) {
+		define('ADHERDER_VERSION', 'adherder_version');
+	}
+	if ( !defined('ADHERDER_VERSION_NUM') ) {
+		define('ADHERDER_VERSION_NUM', '1.0');
+	}
+	add_option(ADHERDER_VERSION, ADHERDER_VERSION_NUM);
+	
 	// code that should always be loaded
 	require_once(plugin_dir_path(__FILE__)."/includes/database.php");
 	require_once(plugin_dir_path(__FILE__)."/includes/display.php");
@@ -33,7 +41,7 @@ function adherder_plugin_setup() {
 	register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
 
 	// add JavaScript files and Ajax methods
-	add_action('wp_enqueue_scripts', 'ctopt_enqueue_scripts');
+	add_action('wp_enqueue_scripts', 'adherder_client_scripts');
 	add_action('wp_ajax_nopriv_ctopt-track', 'ctopt_ajax_register_track');
 	add_action('wp_ajax_ctopt-track', 'ctopt_ajax_register_track');
 	add_action('wp_ajax_nopriv_ctopt-impression', 'ctopt_ajax_register_impression');

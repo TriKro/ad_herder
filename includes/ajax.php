@@ -1,7 +1,6 @@
 <?php
-function ctopt_enqueue_scripts() {
-  wp_enqueue_script('jquery');
-  wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'));
+function adherder_client_scripts() {
+  wp_enqueue_script('ctopt', plugins_url('/adherder/js/ctopt.js'), array('jquery'), ADHERDER_VERSION_NUM);
   wp_localize_script( 'ctopt', 'AdHerder', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 
