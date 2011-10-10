@@ -1,44 +1,34 @@
 <?php
-function ctopt_register_custom_post_type() 
+/**
+ * Setup the admin functions for the plugin.
+ * 
+ * Registers a custom post type, called "Ad". Adds menu items
+ *  & sorting options
+ * 
+ */
+function adherder_admin_setup() 
 {
-  $labels = array(
-    'name' => __('Ads'),
-    'singular_name' => __('Ad'),
-    'add_new' => __('Add New'),
-    'add_new_item' => __('Add New Ad'),
-    'edit_item' => __('Edit Ad'),
-    'new_item' => __('New Ad'),
-    'view_item' => __('View Ad'),
-    'search_items' => __('Search Ads'),
-    'not_found' =>  __('No Ads found'),
-    'not_found_in_trash' => __('No Ads found in Trash'), 
-    'parent_item_colon' => '',
-    'menu_name' => __('Ads'),
+	// add options and reporting menu items.
+	add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
+	add_submenu_page('edit.php?post_type=co-call', 'AdHerder admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
 
-  );
-  $args = array(
-    'labels' => $labels,
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true, 
-    'show_in_menu' => true, 
-    'query_var' => false,
-    'rewrite' => true,
-    'capability_type' => 'post',
-    'has_archive' => true, 
-    'hierarchical' => false,
-    'menu_position' => null,
-    'supports' => array('title','editor','author')
-  ); 
-  
-  register_post_type('co-call',$args);
+	// customize the columns in the admin interface
+	add_filter('manage_edit-co-call_sortable_columns', 'ctopt_column_register_sortable');
+	add_filter('posts_orderby', 'ctopt_column_orderby', 10, 2);
+	add_action('manage_posts_custom_column', 'ctopt_column');
+	add_filter('manage_edit-co-call_columns', 'ctopt_columns');
 
-  add_action('admin_menu', 'callopt_reporting_menu');
-  add_action('admin_menu', 'callopt_admin_menu');
+	// add JavaScript
+	add_action('admin_enqueue_scripts', 'adherder_admin_scripts');
 }
 
-function callopt_reporting_menu() {
-  add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
+/**
+ * Enqueue the JavaScript used by the admin interface
+ * 
+ */
+function adherder_admin_scripts() {
+	// the google chart API is used for reporting
+	wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
 }
 
 function callopt_reporting() {
@@ -86,11 +76,7 @@ function callopt_reporting() {
     $message = 'Older impression data cleared';
   }
   $reports = CallToOptimizeGateway::findReports();
-  include(dirname(__FILE__).'/../template/report.php');
-}
-
-function callopt_admin_menu() {
-  add_submenu_page('edit.php?post_type=co-call', 'AdHerder admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
+  include(plugin_dir_path(__FILE__).'/../template/report.php');
 }
 
 function callopt_admin() {
@@ -134,44 +120,8 @@ function callopt_admin() {
     }
     update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
   }
-?>
-<h2>AdHerder configuration</h2>
-<div class="wrap">
-  <?php if($message) {
-    echo '<p>' . $message . '</p>';
-  } ?>
-  <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-    <h3>Ad selection</h3>
-    <p>The different weights (numeric and &gt;0) with which to select the calls. A higher value means they are more likely to be displayed. It is not suggested to put any of them at 0, but it is possible (they won't be displayed)</p>
-    <table>
-      <tr>
-        <td><label for="ctopt_normalWeight">Normal/new Ad</label></td>
-        <td><input name="ctopt_normalWeight" id="ctopt_normalWeight" type="text" value="<?php echo $options['normalWeight']; ?>" /></td>
-      </tr>
-      <tr>
-        <td><label for="ctopt_convertedWeight">Ad for which a user has already converted</label></td>
-        <td><input name="ctopt_convertedWeight" id="ctopt_convertedWeight" type="text" value="<?php echo $options['convertedWeight']; ?>" /></td>
-      </tr>
-      <tr>
-        <td><label for="ctopt_seenWeight">Ad that has been seen (see below)</label></td>
-        <td><input name="ctopt_seenWeight" id="ctopt_seenWeight" type="text" value="<?php echo $options['seenWeight']; ?>" /></td>
-      </tr>
-    </table>
-    <h3>Display limit</h3>
-    <p><label for="ctopt_seenLimit">Number of times an ad is displayed before it is considered "seen"</label></p>
-    <p><input type="text" name="ctopt_seenLimit" id="ctopt_seenLimit" value="<?php echo $options['seenLimit']; ?>" /></p>
-
-    <h3>Track logged in users?</h3>
-    <p>Selecting "No" will not store tracking data or impressions/click counts for users that are logged in.</p>
-<p><label for="ctopt_trackLoggedIn_yes"><input type="radio" id="ctopt_trackLoggedIn_yes" name="ctopt_trackLoggedIn" value="true" <?php if ($options['trackLoggedIn'] == "true") { echo 'checked="checked"'; }?> /> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="ctopt_trackLoggedIn_no"><input type="radio" id="ctopt_trackLoggedIn_no" name="ctopt_trackLoggedIn" value="false" <?php if ($options['trackLoggedIn'] == "false") { echo 'checked="checked"'; }?>/> No</label></p>
-
-
-    <div class="submit">
-      <input type="submit" name="ctopt_updateOptions" value="Update Settings" />
-    </div>
-  </form>
-</div>
-<?php }
+  include(plugin_dir_path(__FILE__).'/../template/options.php');
+}
 
 function ctopt_columns($columns)
 {
