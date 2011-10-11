@@ -65,7 +65,11 @@ class Adherder_Widget extends WP_Widget {
 	
     /** constructor */
     function Adherder_Widget() {
-        parent::WP_Widget(false, $name = 'AdHerder widget');	
+		$widget_ops = array(
+			'classname' => 'adherder_widget_class',
+			'description' => 'Display ads based on your criteria.'
+		);
+		$this->WP_Widget( 'Adherder_Widget', 'AdHerder widget', $widget_ops );
     }
 
     /** @see WP_Widget::widget */
