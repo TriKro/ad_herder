@@ -26,12 +26,14 @@
 
     <h3>Track logged in users?</h3>
     <p>Selecting "No" will not store tracking data or impressions/click counts for users that are logged in.</p>
-	<p><label for="ctopt_trackLoggedIn_yes"><input type="radio" id="ctopt_trackLoggedIn_yes" name="ctopt_trackLoggedIn" value="true" <?php if ($options['trackLoggedIn'] == "true") { echo 'checked="checked"'; }?> /> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="ctopt_trackLoggedIn_no"><input type="radio" id="ctopt_trackLoggedIn_no" name="ctopt_trackLoggedIn" value="false" <?php if ($options['trackLoggedIn'] == "false") { echo 'checked="checked"'; }?>/> No</label></p>
+	<p><label for="ctopt_trackLoggedIn_yes"><input type="radio" id="ctopt_trackLoggedIn_yes" name="ctopt_trackLoggedIn" value="true" <?php checked($options['trackLoggedIn'], "true"); ?> />Yes</label>
+	   <label for="ctopt_trackLoggedIn_no"><input type="radio" id="ctopt_trackLoggedIn_no" name="ctopt_trackLoggedIn" value="false" <?php checked($options['trackLoggedIn'], "false"); ?> />No</label></p>
 
 	<h3>Use Ajax to display widget?</h3>
 	<p>This will load the widget's content via an Ajax call. If you are using any kind of caching plugin and want correct results, 
 	you need to turn this on. But keep in mind that you might need to rewrite some ads that use JavaScript.</p>
-	<p><label for="ctopt_ajaxWidget_yes"><input type="radio" id="ctopt_ajaxWidget_yes" name="ctopt_ajaxWidget" value="true" <?php if ($options['ajaxWidget'] == "true") { echo 'checked="checked"'; }?> /> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="ctopt_ajaxWidget_no"><input type="radio" id="ctopt_ajaxWidget_no" name="ctopt_ajaxWidget" value="false" <?php if ($options['ajaxWidget'] == "false") { echo 'checked="checked"'; }?>/> No</label></p>
+	<p><label for="ctopt_ajaxWidget_yes"><input type="radio" id="ctopt_ajaxWidget_yes" name="ctopt_ajaxWidget" value="true" <?php checked($options['ajaxWidget'], "true"); ?> />Yes</label>
+	   <label for="ctopt_ajaxWidget_no"><input type="radio" id="ctopt_ajaxWidget_no" name="ctopt_ajaxWidget" value="false" <?php checked($options['ajaxWidget'], "false"); ?> />No</label></p>
 
     <div class="submit">
       <input type="submit" name="ctopt_updateOptions" value="Update Settings" />
