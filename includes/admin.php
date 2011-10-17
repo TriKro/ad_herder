@@ -9,7 +9,7 @@
 function adherder_admin_menu() {
 	// add options and reporting menu items.
 	$reportsMenu = add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
-	add_options_page('AdHerder Options', 'AdHerder Options', 'manage_options', 'adherder_options', 'adherder_options_page');
+	add_submenu_page('edit.php?post_type=co-call', 'AdHerder Options', 'Options', 'manage_options', 'adherder_options', 'adherder_options_page');
 
 	// customize the columns in the admin interface
 	add_filter('manage_edit-co-call_sortable_columns', 'ctopt_column_register_sortable');
@@ -24,19 +24,19 @@ function adherder_admin_menu() {
 function adherder_admin_init() {
 	register_setting('adherder_options', 'adherder_options', 'adherder_validate_options');
 	
-	add_settings_section('adherder_ad_selection', 'Ad selection', 'adherder_ad_selection_text', 'adherder_options');
-	add_settings_field('adherder_normal_weight', 'Normal/New Ad', 'adherder_normal_weight_input', 'adherder_options', 'adherder_ad_selection');
-	add_settings_field('adherder_converted_weight', 'Ad for which a user has already converted', 'adherder_converted_weight_input', 'adherder_options', 'adherder_ad_selection');
-	add_settings_field('adherder_seen_weight', 'Ad that has been seen (see below)', 'adherder_seen_weight_input', 'adherder_options', 'adherder_ad_selection');
+	add_settings_section('adherder_ad_selection', 'Ad selection', 'adherder_ad_selection_text', 'edit.php?post_type=co-call');
+	add_settings_field('adherder_normal_weight', 'Normal/New Ad', 'adherder_normal_weight_input', 'edit.php?post_type=co-call', 'adherder_ad_selection');
+	add_settings_field('adherder_converted_weight', 'Ad for which a user has already converted', 'adherder_converted_weight_input', 'edit.php?post_type=co-call', 'adherder_ad_selection');
+	add_settings_field('adherder_seen_weight', 'Ad that has been seen (see below)', 'adherder_seen_weight_input', 'edit.php?post_type=co-call', 'adherder_ad_selection');
 	
-	add_settings_section('adherder_display_limit', 'Display limit', 'adherder_display_limit_text', 'adherder_options');
-	add_settings_field('adherder_seen_limit', 'Number', 'adherder_seen_limit_input', 'adherder_options', 'adherder_display_limit');
+	add_settings_section('adherder_display_limit', 'Display limit', 'adherder_display_limit_text', 'edit.php?post_type=co-call');
+	add_settings_field('adherder_seen_limit', 'Number', 'adherder_seen_limit_input', 'edit.php?post_type=co-call', 'adherder_display_limit');
 
-	add_settings_section('adherder_track_logged_in_section', 'Track logged in users', 'adherder_track_logged_in_text', 'adherder_options');
-	add_settings_field('adherder_track_logged_in', 'Track logged in users?', 'adherder_track_logged_in_input', 'adherder_options', 'adherder_track_logged_in_section');
+	add_settings_section('adherder_track_logged_in_section', 'Track logged in users', 'adherder_track_logged_in_text', 'edit.php?post_type=co-call');
+	add_settings_field('adherder_track_logged_in', 'Track logged in users?', 'adherder_track_logged_in_input', 'edit.php?post_type=co-call', 'adherder_track_logged_in_section');
 
-	add_settings_section('adherder_ajax_widget_section', 'Use Ajax to display widget?', 'adherder_ajax_widget_section_text', 'adherder_options');
-	add_settings_field('adherder_ajax_widget', 'Use Ajax', 'adherder_ajax_widget_input', 'adherder_options', 'adherder_ajax_widget_section');
+	add_settings_section('adherder_ajax_widget_section', 'Use Ajax to display widget?', 'adherder_ajax_widget_section_text', 'edit.php?post_type=co-call');
+	add_settings_field('adherder_ajax_widget', 'Use Ajax', 'adherder_ajax_widget_input', 'edit.php?post_type=co-call', 'adherder_ajax_widget_section');
 }
 
 function adherder_ad_selection_text() {

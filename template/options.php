@@ -4,7 +4,7 @@
 	<form action="options.php" method="post">
 		<?php
 		settings_fields('adherder_options');
-		do_settings_sections('adherder_options');
+		do_settings_sections('edit.php?post_type=co-call');
 		?>
 		<input name="Submit" type="submit" value="Save Changes" class="button-primary" />
 	</form>
