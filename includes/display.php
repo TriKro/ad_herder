@@ -14,7 +14,7 @@ function adherder_display(){
                      'post_status' => 'publish',
                      'numberposts' => -1);
     $ctas    = get_posts($args);
-    $options = CallToOptimizeOptions::get();
+    $options = get_option('adherder_options');
 
     if(count($ctas)>0){
       $uid = $_COOKIE['ctopt_uid'];
@@ -22,13 +22,13 @@ function adherder_display(){
       foreach($ctas as $cta) {
         $converted = CallToOptimizeGateway::hasConverted($uid, $cta->ID);
         if($converted) {
-          $weights[] = $options['convertedWeight'];
+          $weights[] = $options['converted_weight'];
         } else {
-          $seen = CallToOptimizeGateway::hasSeen($uid, $cta->ID, $options['seenLimit']);
+          $seen = CallToOptimizeGateway::hasSeen($uid, $cta->ID, $options['seen_limit']);
           if($seen) {
-            $weights[] = $options['seenWeight'];
+            $weights[] = $options['seen_weight'];
           } else {
-            $weights[] = $options['normalWeight'];
+            $weights[] = $options['normal_weight'];
           }
         }
       }
@@ -75,9 +75,9 @@ class Adherder_Widget extends WP_Widget {
     /** @see WP_Widget::widget */
     function widget($args, $instance) {	
 		extract( $args );
-		$options = CallToOptimizeOptions::get();
+		$options = get_option('adherder_options');
 		echo $before_widget;
-		if($options['ajaxWidget'] == 'true') {
+		if($options['ajax_widget']) {
 			echo '<div class="adherder_placeholder">loading...</div>';
 		} else {
 			echo adherder_display();

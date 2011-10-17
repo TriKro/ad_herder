@@ -31,11 +31,13 @@ add_action('widgets_init', create_function('', 'return register_widget("Adherder
 // add the administrative functions only when in the admin interface
 if ( is_admin() ) {
 	require_once(plugin_dir_path(__FILE__).'/includes/admin.php' );
-	add_action('admin_menu', 'adherder_admin_setup');
+	add_action('admin_menu', 'adherder_admin_menu');
+	add_action('admin_init', 'adherder_admin_init');
 }
 
 // install click tracking database table on activation
 register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
+register_activation_hook(__FILE__, 'adherder_database_init_options');
 
 // add Ajax action to the public blog
 adherder_ajax_init();

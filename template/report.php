@@ -1,38 +1,43 @@
-<div>
-<h2>AdHerder Engagement Reports</h2>
-<?php if($message) {
-  echo "<div id='setting-error-settings_updated' class='updated settings-error'><p><strong>" . $message . "</strong></p></div>";
-} ?>
-<div id="dashboard">
-  <table>
-    <tr>
-      <td style="width: 300px; vertical-align: top;">
-        <div id="control-status"></div>
-        <div id="control-impressions"></div>
-        <div id="control-clicks"></div>
-      </td>
-      <td>
-        <div id="chart-report"></div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <div id="chart-legend"></div>
-      </td>
-    </tr>
-  </table>
-</div>
-<form id="ctopt_switchStatus" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-  <input type="hidden" name="ctopt_switchCallId" id="ctopt_switchCallId" />
-  <input type="hidden" name="ctopt_switchStatus" />
-</form>
-<form id="ctopt_clearHistory" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-  <input type="hidden" name="ctopt_clearCallId" id="ctopt_clearCallId" />
-  <input type="hidden" name="ctopt_clearHistory" />
-</form>
-<form id="ctopt_cleanupOldTracking" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-  <p><input type="submit" name="ctopt_cleanupOldTracking" value="Clean up old impression tracking data" /></p>
-</form>
+<div class="wrap">
+	<?php screen_icon('options-general'); ?>
+	<h2>AdHerder Engagement Reports</h2>
+	
+	<?php if($message) {
+		echo '<div id="message" class="error">' . $message . '</div>';
+	} ?>
+	
+	<div id="dashboard">
+		<table>
+			<tr>
+				<td style="width: 300px; vertical-align: top;">
+					<div id="control-status"></div>
+					<div id="control-impressions"></div>
+					<div id="control-clicks"></div>
+				</td>
+				<td>
+					<div id="chart-report"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div id="chart-legend"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<form id="ctopt_switchStatus" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="ctopt_switchCallId" id="ctopt_switchCallId" />
+		<input type="hidden" name="ctopt_switchStatus" />
+	</form>
+	<form id="ctopt_clearHistory" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="ctopt_clearCallId" id="ctopt_clearCallId" />
+		<input type="hidden" name="ctopt_clearHistory" />
+	</form>
+	<form id="ctopt_cleanupOldTracking" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<p><input type="submit" name="ctopt_cleanupOldTracking" value="Clean up old impression tracking data" class="button-secondary" /></p>
+	</form>
+	
 <script type="text/javascript">
       google.load("visualization", "1.1", {packages:["corechart", "table", "controls"]});
       google.setOnLoadCallback(drawChart);
@@ -45,7 +50,7 @@
         data.addColumn('number', 'Impressions');
         data.addColumn('number', 'Clicks');
         data.addColumn('number', 'Conversion %');
-        data.addColumn('string', 'Switch status');
+        data.addColumn('string', 'Status (click to switch)');
         data.addColumn('string', 'Clear history');
         data.addRows(<?php echo count($reports); ?>);
         <?php 
@@ -59,14 +64,14 @@
           echo "data.setValue(" . $count . ", 5,  " . $report->conversion . ");\n";
           $switchValue = "";
           switch($report->post_status) {
-            case 'publish' : $switchValue = 'Go offline'; break;
-            case 'pending' : $switchValue = 'Go online'; break;
+            case 'publish' : $switchValue = 'Online'; break;
+            case 'pending' : $switchValue = 'Offline'; break;
           }
           if($switchValue != "") {
-            $switchValue = "<a href=\"#\" onclick=\"switchStatus(" . $report->id . ")\">" . $switchValue . "</a>";
+            $switchValue = '<a href="#" class="button-secondary" onclick="switchStatus(' . $report->id . ')">' . $switchValue . '</a>';
           }
           echo "data.setValue(" . $count . ", 6,  '" . $switchValue . "');\n";
-          $clearValue = "<a href=\"#\" onclick=\"clearHistory(" . $report->id . ")\">remove data</a>";
+          $clearValue = '<a class="button-secondary" href="#" onclick="clearHistory(' . $report->id . ')">remove data</a>';
           echo "data.setValue(" . $count . ", 7,  '" . $clearValue . "');\n";
           
           $count++;
@@ -121,7 +126,7 @@
           'chartType'  : 'Table',
           'containerId': 'chart-legend',
           'options'    : {
-            'allowHtml': true
+            'allowHtml'     : true
           }
         });
 

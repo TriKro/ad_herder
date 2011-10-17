@@ -1,25 +1,20 @@
 <?php
-class CallToOptimizeOptions {
-  const OPTIONS_NAME = "AdHerderOptions";
-
-  static function get() {
+function adherder_database_init_options() {
     $options = array(
-      'normalWeight' => 2,
-      'convertedWeight' => 1,
-      'seenWeight' => 1,
-      'seenLimit' => 3,
-      'trackLoggedIn' => 'true',
-      'ajaxWidget' => 'false'
+      'normal_weight' => 2,
+      'converted_weight' => 1,
+      'seen_weight' => 1,
+      'seen_limit' => 3,
+      'track_logged_in' => true,
+      'ajax_widget' => false
     );
-    $dbOptions = get_option(self::OPTIONS_NAME);
+    $dbOptions = get_option("adherder_options");
     if(!empty($dbOptions)) {
       foreach($dbOptions as $key => $option) {
         $options[$key] = $option;
       }
     }
-    update_option(self::OPTIONS_NAME, $options);
-    return $options;
-  }
+    update_option("adherder_options", $options);
 }
 
 class CallToOptimizeGateway {
@@ -59,14 +54,14 @@ class CallToOptimizeGateway {
   static function delete($id) {
     global $wpdb;
     $table_name = $wpdb->prefix . 'c2o_tracking';
-    $sql = "DELETE FROM " . $table_name . " WHERE ID = " . $id;
+    $sql = "DELETE FROM " . $table_name . " WHERE ID = " . esc_sql($id);
     $wpdb->query($sql); 
   }
 
   static function deleteForPost($postId) {
     global $wpdb;
     $table_name = $wpdb->prefix . 'c2o_tracking';
-    $sql = "DELETE FROM " . $table_name . " WHERE POST_ID = " . $postId;
+    $sql = "DELETE FROM " . $table_name . " WHERE POST_ID = " . esc_sql($postId);
     $wpdb->query($sql); 
   }
 
@@ -78,9 +73,9 @@ class CallToOptimizeGateway {
     global $wpdb;
     $table_name = $wpdb->prefix . 'c2o_tracking';
     $sql = "SELECT * FROM " . $table_name . "
-             WHERE user_id = '" . mysql_real_escape_string($uid) . "'
+             WHERE user_id = '" . esc_sql($uid) . "'
                AND track_type = 'click'
-               AND post_id = " . $callid;
+               AND post_id = " . esc_sql($callid);
     $conversions = $wpdb->get_results($sql);
     return !empty($conversions);
   }
@@ -91,10 +86,10 @@ class CallToOptimizeGateway {
 
     global $wpdb;
     $table_name = $wpdb->prefix . 'c2o_tracking';
-    $sql = "SELECT COUNT(1) >= " . $times . " FROM " . $table_name . "
-             WHERE user_id = '" . mysql_real_escape_string($uid) . "'
+    $sql = "SELECT COUNT(1) >= " . esc_sql($times) . " FROM " . $table_name . "
+             WHERE user_id = '" . esc_sql($uid) . "'
                AND track_type = 'impression'
-               AND post_id = " . $callid;
+               AND post_id = " . esc_sql($callid);
     return $wpdb->get_var($sql); 
   }
 

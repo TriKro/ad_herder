@@ -6,11 +6,10 @@
  *  & sorting options
  * 
  */
-function adherder_admin_setup() 
-{
+function adherder_admin_menu() {
 	// add options and reporting menu items.
 	$reportsMenu = add_submenu_page('edit.php?post_type=co-call', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
-	add_submenu_page('edit.php?post_type=co-call', 'AdHerder admin', 'Options', 'manage_options', 'co-admin-menu', 'callopt_admin');
+	add_options_page('AdHerder Options', 'AdHerder Options', 'manage_options', 'adherder_options', 'adherder_options_page');
 
 	// customize the columns in the admin interface
 	add_filter('manage_edit-co-call_sortable_columns', 'ctopt_column_register_sortable');
@@ -20,6 +19,120 @@ function adherder_admin_setup()
 
 	// add JavaScript for reporting only
 	add_action('load-'.$reportsMenu, 'adherder_report_scripts');
+}
+
+function adherder_admin_init() {
+	register_setting('adherder_options', 'adherder_options', 'adherder_validate_options');
+	
+	add_settings_section('adherder_ad_selection', 'Ad selection', 'adherder_ad_selection_text', 'adherder_options');
+	add_settings_field('adherder_normal_weight', 'Normal/New Ad', 'adherder_normal_weight_input', 'adherder_options', 'adherder_ad_selection');
+	add_settings_field('adherder_converted_weight', 'Ad for which a user has already converted', 'adherder_converted_weight_input', 'adherder_options', 'adherder_ad_selection');
+	add_settings_field('adherder_seen_weight', 'Ad that has been seen (see below)', 'adherder_seen_weight_input', 'adherder_options', 'adherder_ad_selection');
+	
+	add_settings_section('adherder_display_limit', 'Display limit', 'adherder_display_limit_text', 'adherder_options');
+	add_settings_field('adherder_seen_limit', 'Number', 'adherder_seen_limit_input', 'adherder_options', 'adherder_display_limit');
+
+	add_settings_section('adherder_track_logged_in_section', 'Track logged in users', 'adherder_track_logged_in_text', 'adherder_options');
+	add_settings_field('adherder_track_logged_in', 'Track logged in users?', 'adherder_track_logged_in_input', 'adherder_options', 'adherder_track_logged_in_section');
+
+	add_settings_section('adherder_ajax_widget_section', 'Use Ajax to display widget?', 'adherder_ajax_widget_section_text', 'adherder_options');
+	add_settings_field('adherder_ajax_widget', 'Use Ajax', 'adherder_ajax_widget_input', 'adherder_options', 'adherder_ajax_widget_section');
+}
+
+function adherder_ad_selection_text() {
+	echo '<p>The different weights (numeric and >0) with which to select the calls. A higher value means they are more likely to be displayed. It is not suggested to put any of them at 0, but it is possible (they won\'t be displayed)</p>';
+}
+
+function adherder_normal_weight_input() {
+	$options = get_option('adherder_options');
+	echo "<input id='normal_weight' name='adherder_options[normal_weight]' type='text' value='{$options['normal_weight']}' />";
+}
+
+function adherder_converted_weight_input() {
+	$options = get_option('adherder_options');
+	echo "<input id='converted_weight' name='adherder_options[converted_weight]' type='text' value='{$options['converted_weight']}' />";
+}
+
+function adherder_seen_weight_input() {
+	$options = get_option('adherder_options');
+	echo "<input id='seen_weight' name='adherder_options[seen_weight]' type='text' value='{$options['seen_weight']}' />";
+}
+
+function adherder_display_limit_text() {
+	echo '<p>Entere here the number of times an ad is displayed before it is considered "seen"</p>';
+}
+
+function adherder_seen_limit_input() {
+	$options = get_option('adherder_options');
+	echo "<input id='seen_limit' name='adherder_options[seen_limit]' type='text' value='{$options['seen_limit']}' />";
+}
+
+function adherder_track_logged_in_text() {
+	echo '<p>When this option is disabled, the plugin will not store tracking data or impressions/click counts for users that are logged in.</p>';
+}
+
+function adherder_track_logged_in_input() {
+	$options = get_option('adherder_options');
+	echo "<input id='track_logged_in' name='adherder_options[track_logged_in]' "; 
+	checked($options['track_logged_in'], 1);
+	echo " type='checkbox'  />";
+}
+
+function adherder_ajax_widget_section_text() {
+	echo '<p>This will load the widget\'s content via an Ajax call. If you are using any kind of caching plugin and want correct results, you need to turn this on. But keep in mind that you might need to rewrite some ads that use JavaScript.</p>';
+}
+
+function adherder_ajax_widget_input() {
+	$options = get_option('adherder_options');
+	echo "<input id='ajax_widget' name='adherder_options[ajax_widget]' "; 
+	checked($options['ajax_widget'], 1);
+	echo " type='checkbox'  />";
+}
+
+function adherder_validate_options( $input ) {
+	$valid   = array();
+	$options = get_option('adherder_options');
+	
+	$input_normal_weight = $input['normal_weight'];
+	if(is_numeric($input_normal_weight)) {
+		$valid['normal_weight'] = absint($input_normal_weight);
+	} else {
+		add_settings_error('adherder_normal_weight', 'adherder_options_error', 'Weight must be >= 0');
+		$valid['normal_weight'] = $options['normal_weight'];
+	}
+	
+	$input_converted_weight = $input['converted_weight'];
+	if(is_numeric($input_converted_weight)) {
+		$valid['converted_weight'] = absint($input_converted_weight);
+	} else {
+		add_settings_error('adherder_converted_weight', 'adherder_options_error', 'Weight must be >= 0');
+		$valid['converted_weight'] = $options['converted_weight'];
+	}
+
+	$input_seen_weight = $input['seen_weight'];
+	if(is_numeric($input_seen_weight)) {
+		$valid['seen_weight'] = absint($input_seen_weight);
+	} else {
+		add_settings_error('adherder_seen_weight', 'adherder_options_error', 'Weight must be >= 0');
+		$valid['seen_weight'] = $options['seen_weight'];
+	}
+		
+	$input_seen_limit = $input['seen_limit'];
+	if(is_numeric($input_seen_limit)) {
+		$valid['seen_limit'] = absint($input_seen_limit);
+	} else {
+		add_settings_error('adherder_seen_limit', 'adherder_options_error', 'Limit must be >= 0');
+		$valid['seen_limit'] = $options['seen_limit'];
+	}
+	
+	$valid['track_logged_in'] = isset($input['track_logged_in']);
+	$valid['ajax_widget'] = isset($input['ajax_widget']);
+	
+	return $valid;
+}
+
+function adherder_options_page() {
+  include(plugin_dir_path(__FILE__).'/../template/options.php');
 }
 
 /**
@@ -53,7 +166,7 @@ function callopt_reporting() {
         wp_update_post($post_update);
       }
     } else {
-      $message = 'The call id you entered is incorrect.';
+      $message = 'The ad id you entered is incorrect.';
     }
   }
   if(isset($_POST['ctopt_clearHistory'])) {
@@ -63,9 +176,9 @@ function callopt_reporting() {
       CallToOptimizeGateway::deleteForPost($call_id);
       update_post_meta($call_id, 'ctopt_impressions', 0);
       update_post_meta($call_id, 'ctopt_clicks', 0);
-      $message = 'Cleared all data for call with id ' . $call_id;
+      $message = 'Cleared all data for ad with id ' . $call_id;
     } else {
-      $message = 'Id ' . $call_id . ' is not a valid call to action id'; 
+      $message = 'Id ' . $call_id . ' is not a valid ad id'; 
     }
   }
   if(isset($_POST['ctopt_cleanupOldTracking'])) {
@@ -77,53 +190,6 @@ function callopt_reporting() {
   }
   $reports = CallToOptimizeGateway::findReports();
   include(plugin_dir_path(__FILE__).'/../template/report.php');
-}
-
-function callopt_admin() {
-  $message = ''; 
-  $options = CallToOptimizeOptions::get();
-  if(isset($_POST['ctopt_updateOptions'])) {
-    if(isset($_POST['ctopt_normalWeight'])) {
-      $nw = $_POST['ctopt_normalWeight'];
-      if(preg_match('/^\d+$/', $nw)) {
-        $options['normalWeight'] = $nw;
-      } else {
-        $message = 'Weight must be a positive or zero number';
-      }
-    }
-    if(isset($_POST['ctopt_convertedWeight'])) {
-      $cw = $_POST['ctopt_convertedWeight'];
-      if(preg_match('/^\d+$/', $cw)) {
-        $options['convertedWeight'] = $cw;
-      } else {
-        $message = 'Weight must be a positive or zero number';
-      }
-    }
-    if(isset($_POST['ctopt_seenWeight'])) {
-      $sw = $_POST['ctopt_seenWeight'];
-      if(preg_match('/^\d+$/', $sw)) {
-        $options['seenWeight'] = $sw;
-      } else {
-        $message = 'Weight must be a positive or zero number';
-      }
-    }
-    if(isset($_POST['ctopt_seenLimit'])) {
-      $sl = $_POST['ctopt_seenLimit'];
-      if(preg_match('/^\d+$/', $sl)) {
-        $options['seenLimit'] = $sl;
-      } else {
-        $message = 'Weight must be a positive or zero number';
-      }
-    }
-    if(isset($_POST['ctopt_trackLoggedIn'])) {
-      $options['trackLoggedIn'] = $_POST['ctopt_trackLoggedIn'];
-    }
-    if(isset($_POST['ctopt_ajaxWidget'])) {
-      $options['ajaxWidget'] = $_POST['ctopt_ajaxWidget'];
-    }
-    update_option(CallToOptimizeOptions::OPTIONS_NAME , $options);
-  }
-  include(plugin_dir_path(__FILE__).'/../template/options.php');
 }
 
 function ctopt_columns($columns)

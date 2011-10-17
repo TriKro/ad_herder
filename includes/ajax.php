@@ -15,7 +15,7 @@ function adherder_ajax_init() {
 }
 
 function adherder_track_conversion() {
-  $callID = $_POST['ad_id'];
+  $callID = absint($_POST['ad_id']);
   ctopt_register_click($callID);
 
   $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
@@ -25,7 +25,7 @@ function adherder_track_conversion() {
 }
 
 function adherder_track_impression() {
-  $callID = $_POST['ad_id'];
+  $callID = absint($_POST['ad_id']);
   ctopt_register_impression($callID);
 
   $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );

@@ -39,8 +39,8 @@ function ctopt_track_logged_in() {
   if(!is_user_logged_in()) {
     return true; // always track users that are not logged in
   }
-  $options = CallToOptimizeOptions::get();
-  return $options['trackLoggedIn'] == 'true'; // only track logged in users when the option says so
+  $options = get_option('adherder_options');
+  return $options['track_logged_in']; // only track logged in users when the option says so
 }
 
 function ctopt_register_impression($id) {
@@ -77,7 +77,7 @@ function ctopt_db_track($id, $type) {
   global $wpdb;
   $uid = $_COOKIE['ctopt_uid'];
   $sql = 'INSERT INTO ' . $wpdb->prefix . 'c2o_tracking(post_id, user_id, track_type) VALUES ('
-         . $id . ",'" . $uid . "','" . $type . "')";
+         . esc_sql($id) . ",'" . esc_sql($uid) . "','" . esc_sql($type) . "')";
   $wpdb->query($sql);
 }
 
