@@ -173,7 +173,7 @@ function callopt_reporting() {
     $call_id   = $_POST['ctopt_clearCallId'];
     $call_post = get_post($call_id);
     if($call_post && $call_post->post_type == 'co-call') {
-      CallToOptimizeGateway::deleteForPost($call_id);
+      adherder_database_clean_for_post($call_id);
       update_post_meta($call_id, 'ctopt_impressions', 0);
       update_post_meta($call_id, 'ctopt_clicks', 0);
       $message = 'Cleared all data for ad with id ' . $call_id;
@@ -182,13 +182,10 @@ function callopt_reporting() {
     }
   }
   if(isset($_POST['ctopt_cleanupOldTracking'])) {
-    $oldData = CallToOptimizeGateway::findOldTracking();
-    foreach($oldData as $data) {
-      CallToOptimizeGateway::delete($oldData->id);
-    }
+    adherder_database_clean();
     $message = 'Older impression data cleared';
   }
-  $reports = CallToOptimizeGateway::findReports();
+  $reports = adherder_database_find_reports();
   include(plugin_dir_path(__FILE__).'/../template/report.php');
 }
 

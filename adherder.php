@@ -36,7 +36,7 @@ if ( is_admin() ) {
 }
 
 // install click tracking database table on activation
-register_activation_hook(__FILE__, array('CallToOptimizeGateway','install'));
+register_activation_hook(__FILE__, 'adherder_database_install');
 register_activation_hook(__FILE__, 'adherder_database_init_options');
 
 // add Ajax action to the public blog

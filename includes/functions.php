@@ -54,7 +54,7 @@ function ctopt_register_impression($id) {
 		$ctopt_impressions++;
 		update_post_meta($id, 'ctopt_impressions', $ctopt_impressions);
 
-		ctopt_db_track($id, 'impression');
+		adherder_database_track($id, 'impression');
 	}
 }
 
@@ -69,16 +69,8 @@ function ctopt_register_click($id) {
 		$ctopt_clicks++;
 		update_post_meta($id, 'ctopt_clicks', $ctopt_clicks);
 
-		ctopt_db_track($id, 'click');
+		adherder_database_track($id, 'click');
 	}
-}
-
-function ctopt_db_track($id, $type) {
-  global $wpdb;
-  $uid = $_COOKIE['ctopt_uid'];
-  $sql = 'INSERT INTO ' . $wpdb->prefix . 'c2o_tracking(post_id, user_id, track_type) VALUES ('
-         . esc_sql($id) . ",'" . esc_sql($uid) . "','" . esc_sql($type) . "')";
-  $wpdb->query($sql);
 }
 
 function ctopt_get_impressions($id) {

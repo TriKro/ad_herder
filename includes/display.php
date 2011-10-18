@@ -20,11 +20,11 @@ function adherder_display(){
       $uid = $_COOKIE['ctopt_uid'];
       $weights = array();
       foreach($ctas as $cta) {
-        $converted = CallToOptimizeGateway::hasConverted($uid, $cta->ID);
+        $converted = adherder_database_has_converted($uid, $cta->ID);
         if($converted) {
           $weights[] = $options['converted_weight'];
         } else {
-          $seen = CallToOptimizeGateway::hasSeen($uid, $cta->ID, $options['seen_limit']);
+          $seen = adherder_database_has_seen($uid, $cta->ID, $options['seen_limit']);
           if($seen) {
             $weights[] = $options['seen_weight'];
           } else {
