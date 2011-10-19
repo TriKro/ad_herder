@@ -17,7 +17,7 @@ if ( !defined('ADHERDER_VERSION_NUM') ) {
 add_option(ADHERDER_VERSION, ADHERDER_VERSION_NUM);
 
 if ( !defined('ADHERDER_FEEDBACK_LINK') ) {
-	define('ADHERDER_FEEDBACK_LINK', 'mailto:i@mnotaninja.com');
+	define('ADHERDER_FEEDBACK_LINK', 'mailto:tristan@grasshopperherder.com');
 }
 if ( !defined('ADHERDER_DONATE_EMAIL') ) {
 	define('ADHERDER_DONATE_EMAIL', 'accounts@tristankromer.com');
