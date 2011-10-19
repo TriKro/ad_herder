@@ -32,7 +32,7 @@ function adherder_register_post_type() {
 		'menu_position' => null,
 		'supports' => array('title','editor','author')
 	); 
-	register_post_type('co-call',$args);
+	register_post_type('adherder_ad',$args);
 }
 
 function ctopt_track_logged_in() {

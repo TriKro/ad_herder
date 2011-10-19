@@ -89,7 +89,7 @@ function adherder_database_find_reports() {
       id, post_title, post_status, 
       IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'ctopt_impressions'),0) as impressions, 
       IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'ctopt_clicks'), 0) as clicks 
-      FROM wp_posts p WHERE post_type = 'co-call'");
+      FROM wp_posts p WHERE post_type = 'adherder_ad'");
     foreach($reports as $report) {
       $conversion = 0;
       if($report->impressions != '0') {

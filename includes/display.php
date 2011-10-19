@@ -10,7 +10,7 @@ function adherder_display(){
   }
   if(!$cta) {
     //Get all calls to action
-    $args    = array('post_type' => 'co-call', 
+    $args    = array('post_type' => 'adherder_ad', 
                      'post_status' => 'publish',
                      'numberposts' => -1);
     $ctas    = get_posts($args);
