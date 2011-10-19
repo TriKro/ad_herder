@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: AdHerder
-Plugin URI: http://www.streamhead.com
+Plugin URI: http://grasshopperherder.com/
 Description: Displays call to actions, tracks their performance and optimizes placement
 Version: 1.0
-Author: Peter Backx
-Author URI: http://www.streamhead.com
+Author: Tristan Kromer, Peter Backx
+Author URI: http://grasshopperherder.com/
 */
 
 if ( !defined('ADHERDER_VERSION') ) {
@@ -15,6 +15,13 @@ if ( !defined('ADHERDER_VERSION_NUM') ) {
 	define('ADHERDER_VERSION_NUM', '1.0');
 }
 add_option(ADHERDER_VERSION, ADHERDER_VERSION_NUM);
+
+if ( !defined('ADHERDER_FEEDBACK_LINK') ) {
+	define('ADHERDER_FEEDBACK_LINK', 'mailto:i@mnotaninja.com');
+}
+if ( !defined('ADHERDER_DONATE_EMAIL') ) {
+	define('ADHERDER_DONATE_EMAIL', 'accounts@tristankromer.com');
+}
 	
 // code that should always be loaded
 require_once(plugin_dir_path(__FILE__)."/includes/database.php");

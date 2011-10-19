@@ -6,6 +6,13 @@
 		echo '<div id="message" class="error">' . $message . '</div>';
 	} ?>
 	
+	<div id="feedback" style="float:right; width: 200px; z-index: 10;" class="postbox">
+		<div class="inside">
+			<p>We value feedback, <a href="<?php echo ADHERDER_FEEDBACK_LINK; ?>">please get in touch with us.</a></p>
+			<p>If you're enjoying this plugin, why not donate towards future extensions?</p>
+		</div>
+	</div>
+	
 	<div id="dashboard">
 		<table>
 			<tr>
