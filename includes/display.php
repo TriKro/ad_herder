@@ -15,62 +15,67 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
 function adherder_display(){
-  //override display via request parameter
-  $qs    = $_SERVER['REQUEST_URI'];
-  $qsPos = strpos($qs, 'adherder_ad');
-  if(!(false === $qsPos)) {
-    $cocall_id   = $_GET['adherder_ad'];
-    $cta         = get_post($cocall_id);
-    $cta_content = $cta->post_content;
-  }
-  if(!$cta) {
-    //Get all calls to action
-    $args    = array('post_type' => 'adherder_ad', 
-                     'post_status' => 'publish',
-                     'numberposts' => -1);
-    $ctas    = get_posts($args);
-    $options = get_option('adherder_options');
+	//override display via request parameter
+	$qs    = $_SERVER['REQUEST_URI'];
+	$qsPos = strpos($qs, 'adherder_ad');
+	if(!(false === $qsPos)) {
+		$ad_id 		= $_GET['adherder_ad'];
+		$ad_post    = get_post($ad_id);
+		$ad_content = $ad_post->post_content;
+	}
+  
+	if(!$ad_post) {
+		//Get all ads
+		$args    = array('post_type' => 'adherder_ad', 
+						 'post_status' => 'publish',
+						 'numberposts' => -1);
+		$ad_posts    = get_posts($args);
+		$options = get_option('adherder_options');
 
-    if(count($ctas)>0){
-      $uid = $_COOKIE['ctopt_uid'];
-      $weights = array();
-      foreach($ctas as $cta) {
-        $converted = adherder_database_has_converted($uid, $cta->ID);
-        if($converted) {
-          $weights[] = $options['converted_weight'];
-        } else {
-          $seen = adherder_database_has_seen($uid, $cta->ID, $options['seen_limit']);
-          if($seen) {
-            $weights[] = $options['seen_weight'];
-          } else {
-            $weights[] = $options['normal_weight'];
-          }
-        }
-      }
+		if(count($ad_posts)>0){
+			$uid = $_COOKIE['ctopt_uid'];
+			
+			//calculate wait of the ads
+			$weights = array();
+			foreach($ad_posts as $ad_post) {
+				$converted = adherder_database_has_converted($uid, $ad_post->ID);
+				if($converted) {
+					$weights[] = $options['converted_weight'];
+				} else {
+					$seen = adherder_database_has_seen($uid, $ad_post->ID, $options['seen_limit']);
+					if($seen) {
+						$weights[] = $options['seen_weight'];
+					} else {
+						$weights[] = $options['normal_weight'];
+					}
+				}
+			}
 
-      $num = mt_rand(0, array_sum($weights));
-      $i = 0; $n = 0;
-      while($i < count($ctas)) {
-        $n += $weights[$i];
-        if($n >= $num) {
-          break;
-        }
-        $i++;
-      }
-      $cta = $ctas[$i];
-      // http://codex.wordpress.org/Displaying_Posts_Using_a_Custom_Select_Query
-      setup_postdata($cta);
+			//select random ad
+			$num = mt_rand(0, array_sum($weights));
+			$i = 0; $n = 0;
+			while($i < count($ad_posts)) {
+				$n += $weights[$i];
+				if($n >= $num) {
+					break;
+				}
+				$i++;
+			}
+			$ad_post = $ad_posts[$i];
+			
+			// http://codex.wordpress.org/Displaying_Posts_Using_a_Custom_Select_Query
+			setup_postdata($ad_post);
 		
-      $cocall_id   = $cta->ID; 
-      $cta_content = $cta->post_content;
+			$ad_id   	= $ad_post->ID; 
+			$ad_content = $ad_post->post_content;
 		} else {
 			// no calls yet
-			$cocall_id   = -1;
-			$cta_content = "You still need to define some Ads before they can be displayed.";
+			$ad_id   	= -1;
+			$ad_content = "You still need to define some Ads before they can be displayed.";
 		}
 	}
 
-	return '<div class="ctopt ctoptid-' . $cocall_id . '">' . $cta_content . '</div>';
+	return '<div class="ctopt ctoptid-' . $ad_id . '">' . $ad_content . '</div>';
 }
 
 //=============================================
