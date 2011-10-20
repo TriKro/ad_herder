@@ -64,14 +64,14 @@ function adherder_database_clean() {
 	$wpdb->query($sql);
 }
 
-function adherder_database_clean_for_post($postId) {
+function adherder_database_clean_for_post($ad_id) {
     global $wpdb;
     $table_name = $wpdb->prefix . 'adherder_tracking';
-    $sql = "DELETE FROM " . $table_name . " WHERE POST_ID = " . esc_sql($postId);
+    $sql = "DELETE FROM " . $table_name . " WHERE POST_ID = " . esc_sql($ad_id);
     $wpdb->query($sql); 
 }
 
-function adherder_database_has_converted($uid, $callid) {
+function adherder_database_has_converted($uid, $ad_id) {
     if(!preg_match("/^ctopt-uid-/", $uid))
       return false;
 
@@ -80,12 +80,12 @@ function adherder_database_has_converted($uid, $callid) {
     $sql = "SELECT * FROM " . $table_name . "
              WHERE user_id = '" . esc_sql($uid) . "'
                AND track_type = 'click'
-               AND post_id = " . esc_sql($callid);
+               AND post_id = " . esc_sql($ad_id);
     $conversions = $wpdb->get_results($sql);
     return !empty($conversions);
 }
 
-function adherder_database_has_seen($uid, $callid, $times) {
+function adherder_database_has_seen($uid, $ad_id, $times) {
     if(!preg_match("/^ctopt-uid-/", $uid))
       return false;
 
@@ -94,7 +94,7 @@ function adherder_database_has_seen($uid, $callid, $times) {
     $sql = "SELECT COUNT(1) >= " . esc_sql($times) . " FROM " . $table_name . "
              WHERE user_id = '" . esc_sql($uid) . "'
                AND track_type = 'impression'
-               AND post_id = " . esc_sql($callid);
+               AND post_id = " . esc_sql($ad_id);
     return $wpdb->get_var($sql); 
 }
 
