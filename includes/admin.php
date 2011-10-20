@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 function adherder_admin_menu() {
 	// add options and reporting menu items.
-	$reportsMenu = add_submenu_page('edit.php?post_type=adherder_ad', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'callopt_reporting');
+	$reportsMenu = add_submenu_page('edit.php?post_type=adherder_ad', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'adherder_reporting_page');
 	add_submenu_page('edit.php?post_type=adherder_ad', 'AdHerder Options', 'Options', 'manage_options', 'adherder_options', 'adherder_options_page');
 
 	// customize the columns in the admin interface
@@ -159,19 +159,19 @@ function adherder_report_scripts() {
 	wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
 }
 
-function callopt_reporting() {
+function adherder_reporting_page() {
   $message = ''; 
-  if(isset($_POST['ctopt_switchStatus'])) {
-    $call_id   = $_POST['ctopt_switchCallId'];
-    $call_post = get_post($call_id);
-    if($call_post && $call_post->post_type == 'adherder_ad') {
+  if(isset($_POST['adherder_switch_status'])) {
+    $ad_id   = $_POST['adherder_switch_ad_id'];
+    $ad_post = get_post($ad_id);
+    if($ad_post && $ad_post->post_type == 'adherder_ad') {
       $post_update       = array();
-      $post_update['ID'] = $call_id;
+      $post_update['ID'] = $ad_id;
       $post_changed      = false;
-      if($call_post->post_status == 'publish') {
+      if($ad_post->post_status == 'publish') {
         $post_update['post_status'] = 'pending';
         $post_changed = true;
-      } else if($call_post->post_status == 'pending') {
+      } else if($ad_post->post_status == 'pending') {
         $post_update['post_status'] = 'publish';
         $post_changed = true;
       } else {
@@ -184,19 +184,19 @@ function callopt_reporting() {
       $message = 'The ad id you entered is incorrect.';
     }
   }
-  if(isset($_POST['ctopt_clearHistory'])) {
-    $call_id   = $_POST['ctopt_clearCallId'];
-    $call_post = get_post($call_id);
-    if($call_post && $call_post->post_type == 'adherder_ad') {
-      adherder_database_clean_for_post($call_id);
-      update_post_meta($call_id, 'ctopt_impressions', 0);
-      update_post_meta($call_id, 'ctopt_clicks', 0);
-      $message = 'Cleared all data for ad with id ' . $call_id;
+  if(isset($_POST['adherder_clear_history'])) {
+    $ad_id   = $_POST['adherder_clear_ad_id'];
+    $ad_post = get_post($ad_id);
+    if($ad_post && $ad_post->post_type == 'adherder_ad') {
+      adherder_database_clean_for_post($ad_id);
+      update_post_meta($ad_id, 'adherder_impressions', 0);
+      update_post_meta($ad_id, 'adherder_clicks', 0);
+      $message = 'Cleared all data for ad with id ' . $ad_id;
     } else {
-      $message = 'Id ' . $call_id . ' is not a valid ad id'; 
+      $message = 'Id ' . $ad_id . ' is not a valid ad id'; 
     }
   }
-  if(isset($_POST['ctopt_cleanupOldTracking'])) {
+  if(isset($_POST['adherder_cleanup_old_data'])) {
     adherder_database_clean();
     $message = 'Older impression data cleared';
   }
@@ -232,10 +232,10 @@ function ctopt_column_orderby($orderby, $wp_query) {
 	$wp_query->query = wp_parse_args($wp_query->query);
  
 	if ( 'impressions' == @$wp_query->query['orderby'] )
-		$orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = 'ctopt_impressions') " . $wp_query->get('order');
+		$orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = 'adherder_impressions') " . $wp_query->get('order');
  	
 	if ( 'clicks' == @$wp_query->query['orderby'] )
-		$orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = 'ctopt_clicks') " . $wp_query->get('order');
+		$orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = 'adherder_clicks') " . $wp_query->get('order');
 		
 	return $orderby;
 }

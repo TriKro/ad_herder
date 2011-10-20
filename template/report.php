@@ -49,16 +49,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		</table>
 	</div>
 	
-	<form id="ctopt_switchStatus" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<input type="hidden" name="ctopt_switchCallId" id="ctopt_switchCallId" />
-		<input type="hidden" name="ctopt_switchStatus" />
+	<form id="adherder_switch_status" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="adherder_switch_ad_id" id="adherder_switch_ad_id" />
+		<input type="hidden" name="adherder_switch_status" />
 	</form>
-	<form id="ctopt_clearHistory" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<input type="hidden" name="ctopt_clearCallId" id="ctopt_clearCallId" />
-		<input type="hidden" name="ctopt_clearHistory" />
+	<form id="adherder_clear_history" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="adherder_clear_ad_id" id="adherder_clear_ad_id" />
+		<input type="hidden" name="adherder_clear_history" />
 	</form>
-	<form id="ctopt_cleanupOldTracking" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<p><input type="submit" name="ctopt_cleanupOldTracking" value="Clean up old impression tracking data" class="button-secondary" /></p>
+	<form id="adherder_cleanup_old_data" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<p><input type="submit" name="adherder_cleanup_old_data" value="Clean up old impression tracking data" class="button-secondary" /></p>
 	</form>
 	
 <script type="text/javascript">
@@ -159,13 +159,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
       }
       function switchStatus(callId) {
         if(!callId) return;
-        jQuery('#ctopt_switchCallId').val(callId);
-        jQuery('#ctopt_switchStatus').submit();
+        jQuery('#adherder_switch_ad_id').val(callId);
+        jQuery('#adherder_switch_status').submit();
       }
       function clearHistory(callId) {
         if(!callId) return;
-        jQuery('#ctopt_clearCallId').val(callId);
-        jQuery('#ctopt_clearHistory').submit();
+        jQuery('#adherder_clear_ad_id').val(callId);
+        jQuery('#adherder_clear_history').submit();
       }
 </script>
 </div>

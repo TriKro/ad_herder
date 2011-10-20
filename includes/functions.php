@@ -60,14 +60,14 @@ function ctopt_track_logged_in() {
 
 function ctopt_register_impression($id) {
 	if (ctopt_track_logged_in()) {
-		if(get_post_custom_keys($id)&&in_array('ctopt_impressions',get_post_custom_keys($id))){
-			$ctopt_impressions = get_post_meta($id,'ctopt_impressions',true);
+		if(get_post_custom_keys($id)&&in_array('adherder_impressions',get_post_custom_keys($id))){
+			$adherder_impressions = get_post_meta($id,'adherder_impressions',true);
 		}
-		if (!isset($ctopt_impressions)){
-			$ctopt_impressions = 0;
+		if (!isset($adherder_impressions)){
+			$adherder_impressions = 0;
 		}
-		$ctopt_impressions++;
-		update_post_meta($id, 'ctopt_impressions', $ctopt_impressions);
+		$adherder_impressions++;
+		update_post_meta($id, 'adherder_impressions', $adherder_impressions);
 
 		adherder_database_track($id, 'impression');
 	}
@@ -75,29 +75,29 @@ function ctopt_register_impression($id) {
 
 function ctopt_register_click($id) {
 	if (ctopt_track_logged_in()) {
-		if(get_post_custom_keys($id)&&in_array('ctopt_clicks',get_post_custom_keys($id))){
-			$ctopt_clicks = get_post_meta($id,'ctopt_clicks',true);
+		if(get_post_custom_keys($id)&&in_array('adherder_clicks',get_post_custom_keys($id))){
+			$adherder_clicks = get_post_meta($id,'adherder_clicks',true);
 		}
-		if (!isset($ctopt_clicks)){
-			$ctopt_clicks = 0;
+		if (!isset($adherder_clicks)){
+			$adherder_clicks = 0;
 		}
-		$ctopt_clicks++;
-		update_post_meta($id, 'ctopt_clicks', $ctopt_clicks);
+		$adherder_clicks++;
+		update_post_meta($id, 'adherder_clicks', $adherder_clicks);
 
 		adherder_database_track($id, 'click');
 	}
 }
 
 function ctopt_get_impressions($id) {
-	if(get_post_custom_keys($id)&&in_array('ctopt_impressions',get_post_custom_keys($id))){
-		return get_post_meta($id,'ctopt_impressions',true);
+	if(get_post_custom_keys($id)&&in_array('adherder_impressions',get_post_custom_keys($id))){
+		return get_post_meta($id,'adherder_impressions',true);
 	} else {
 	   return 0;
 	}
 }
 function ctopt_get_clicks($id) {
-	if(get_post_custom_keys($id)&&in_array('ctopt_clicks',get_post_custom_keys($id))){
-		return get_post_meta($id,'ctopt_clicks',true);
+	if(get_post_custom_keys($id)&&in_array('adherder_clicks',get_post_custom_keys($id))){
+		return get_post_meta($id,'adherder_clicks',true);
 	} else {
 	   return 0;
 	}
