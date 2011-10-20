@@ -27,10 +27,10 @@ function adherder_admin_menu() {
 	add_submenu_page('edit.php?post_type=adherder_ad', 'AdHerder Options', 'Options', 'manage_options', 'adherder_options', 'adherder_options_page');
 
 	// customize the columns in the admin interface
-	add_filter('manage_edit-adherder_ad_sortable_columns', 'ctopt_column_register_sortable');
-	add_filter('posts_orderby', 'ctopt_column_orderby', 10, 2);
-	add_action('manage_posts_custom_column', 'ctopt_column');
-	add_filter('manage_edit-adherder_ad_columns', 'ctopt_columns');
+	add_filter('manage_edit-adherder_ad_sortable_columns', 'adherder_column_register_sortable');
+	add_filter('posts_orderby', 'adherder_column_orderby', 10, 2);
+	add_action('manage_posts_custom_column', 'adherder_column');
+	add_filter('manage_edit-adherder_ad_columns', 'adherder_columns');
 
 	// add JavaScript for reporting only
 	add_action('load-'.$reportsMenu, 'adherder_report_scripts');
@@ -204,7 +204,7 @@ function adherder_reporting_page() {
   include(plugin_dir_path(__FILE__).'/../template/report.php');
 }
 
-function ctopt_columns($columns)
+function adherder_columns($columns)
 {
 	$columns = array(
 		"cb" => "<input type=\"checkbox\" />",
@@ -218,15 +218,15 @@ function ctopt_columns($columns)
 	return $columns;
 }
 
-function ctopt_column($column)
+function adherder_column($column)
 {
 	global $post;
 	if ("ID" == $column) echo $post->ID;
-	elseif ("impressions" == $column) echo ctopt_get_impressions($post->ID);
-	elseif ("clicks" == $column)  echo ctopt_get_clicks($post->ID);
+	elseif ("impressions" == $column) echo adherder_get_impressions($post->ID);
+	elseif ("clicks" == $column)  echo adherder_get_clicks($post->ID);
 }
-// Add the sorting SQL
-function ctopt_column_orderby($orderby, $wp_query) {
+
+function adherder_column_orderby($orderby, $wp_query) {
 	global $wpdb;
  
 	$wp_query->query = wp_parse_args($wp_query->query);
@@ -239,8 +239,8 @@ function ctopt_column_orderby($orderby, $wp_query) {
 		
 	return $orderby;
 }
-// Register the column as sortable
-function ctopt_column_register_sortable($columns) {
+
+function adherder_column_register_sortable($columns) {
 	$columns['impressions'] = 'impressions';
  	$columns['clicks'] = 'clicks';
 	return $columns;

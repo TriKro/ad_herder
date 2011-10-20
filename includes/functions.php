@@ -88,14 +88,14 @@ function ctopt_register_click($id) {
 	}
 }
 
-function ctopt_get_impressions($id) {
+function adherder_get_impressions($id) {
 	if(get_post_custom_keys($id)&&in_array('adherder_impressions',get_post_custom_keys($id))){
 		return get_post_meta($id,'adherder_impressions',true);
 	} else {
 	   return 0;
 	}
 }
-function ctopt_get_clicks($id) {
+function adherder_get_clicks($id) {
 	if(get_post_custom_keys($id)&&in_array('adherder_clicks',get_post_custom_keys($id))){
 		return get_post_meta($id,'adherder_clicks',true);
 	} else {
