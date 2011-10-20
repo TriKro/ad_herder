@@ -50,7 +50,7 @@ function adherder_register_post_type() {
 	register_post_type('adherder_ad',$args);
 }
 
-function ctopt_track_logged_in() {
+function adherder_store_logged_in() {
   if(!is_user_logged_in()) {
     return true; // always track users that are not logged in
   }
@@ -58,8 +58,8 @@ function ctopt_track_logged_in() {
   return $options['track_logged_in']; // only track logged in users when the option says so
 }
 
-function ctopt_register_impression($id) {
-	if (ctopt_track_logged_in()) {
+function adherder_store_impression($id) {
+	if (adherder_store_logged_in()) {
 		if(get_post_custom_keys($id)&&in_array('adherder_impressions',get_post_custom_keys($id))){
 			$adherder_impressions = get_post_meta($id,'adherder_impressions',true);
 		}
@@ -73,8 +73,8 @@ function ctopt_register_impression($id) {
 	}
 }
 
-function ctopt_register_click($id) {
-	if (ctopt_track_logged_in()) {
+function adherder_store_click($id) {
+	if (adherder_store_logged_in()) {
 		if(get_post_custom_keys($id)&&in_array('adherder_clicks',get_post_custom_keys($id))){
 			$adherder_clicks = get_post_meta($id,'adherder_clicks',true);
 		}

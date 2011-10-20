@@ -30,20 +30,20 @@ function adherder_ajax_init() {
 }
 
 function adherder_track_conversion() {
-  $callID = absint($_POST['ad_id']);
-  ctopt_register_click($callID);
+  $ad_id = absint($_POST['ad_id']);
+  adherder_store_click($ad_id);
 
-  $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
+  $response = json_encode( array( 'ad_id' => $ad_id, 'success' => true ) );
   header( "Content-Type: application/json" );
   echo $response;
   die();
 }
 
 function adherder_track_impression() {
-  $callID = absint($_POST['ad_id']);
-  ctopt_register_impression($callID);
+  $ad_id = absint($_POST['ad_id']);
+  adherder_store_impression($ad_id);
 
-  $response = json_encode( array( 'ad_id' => $callID, 'success' => true ) );
+  $response = json_encode( array( 'ad_id' => $ad_id, 'success' => true ) );
   header( "Content-Type: application/json" );
   echo $response;
   die(); 
