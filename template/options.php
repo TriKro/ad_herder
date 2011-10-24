@@ -17,7 +17,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 <div class="wrap">
 	<?php screen_icon('plugins'); ?>
 	<h2>AdHerder configuration</h2>
-	<form action="options.php" method="post">
+
+	<?php include(plugin_dir_path(__FILE__).'/../template/feedback.php'); ?>
+
+	<form action="options.php" method="post" style="float: left; width: 70%">
 		<?php
 		settings_fields('adherder_options');
 		do_settings_sections('edit.php?post_type=adherder_ad');
