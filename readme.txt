@@ -8,8 +8,7 @@ Tested up to: 3.2.1
 Stable tag: 1.0
 
 AdHerder is the ultimate in automated advertisement management. Enter your 
-ads and the plugin will track the number of impressions and conversions. 
-Based on this data, the plugin selects the best ad for each individual user.
+ads and the plugin selects the best ad for each individual user.
 
 == Description ==
 
