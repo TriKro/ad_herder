@@ -15,7 +15,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
 /**
- * Setup the admin functions for the plugin.
+ * Setup the admin functions for AdHerder.
  * 
  * Registers a custom post type, called "Ad". Adds menu items
  *  & sorting options
@@ -55,7 +55,7 @@ function adherder_admin_init() {
 }
 
 function adherder_ad_selection_text() {
-	echo '<p>The different weights (numeric and >0) with which to select the calls. A higher value means they are more likely to be displayed. It is not suggested to put any of them at 0, but it is possible (they won\'t be displayed)</p>';
+	echo '<p>The different weights (numeric and >0) with which to display the ads. A higher value means they are more likely to be displayed. It is not suggested to put any of them at 0, but it is possible (they won\'t be displayed)</p>';
 }
 
 function adherder_normal_weight_input() {
@@ -74,7 +74,7 @@ function adherder_seen_weight_input() {
 }
 
 function adherder_display_limit_text() {
-	echo '<p>Entere here the number of times an ad is displayed before it is considered "seen"</p>';
+	echo '<p>Enter the number of times an ad is displayed before it is considered "seen"</p>';
 }
 
 function adherder_seen_limit_input() {
@@ -83,7 +83,7 @@ function adherder_seen_limit_input() {
 }
 
 function adherder_track_logged_in_text() {
-	echo '<p>When this option is disabled, the plugin will not store tracking data or impressions/click counts for users that are logged in.</p>';
+	echo '<p>When this option is disabled, AdHerder will not store tracking data or impressions/click counts for users that are logged in.</p>';
 }
 
 function adherder_track_logged_in_input() {

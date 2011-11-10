@@ -7,24 +7,25 @@ Requires at least: 3.0
 Tested up to: 3.2.1
 Stable tag: 1.0
 
-AdHerder is the ultimate in automated advertisement management. Enter your 
-ads and the plugin selects the best ad for each individual user.
-
 == Description ==
 
-AdHerder is the ultimate in automated advertisement management. Enter your 
-ads and the plugin will track the number of impressions and conversions. 
-Based on this data, the plugin selects the best ad for each individual user.
+AdHerder is an automated A/B advertisement testing platform. Create your ads and AdHerder will select the best ad for each individual user.
 
-The plugin will automatically instrument and log clicks on links. Please
-see the FAQ section for information on how to track Facebook likes, Twitter
-follows and Mailchimp signups.
+This means you can create any number of ads to display in a wordpress widget and AdHerder will perform the following functions:
+
+1) Keep track of which ads are converting well so that you can turn off poorly performing ads.
+2) Don't show the same user the same ad over and over. If they didn't click the 3rd time, they're not click the 5th.
+3) Don't show an ad the user has already clicked on. Show them something new.
+
+All behaviors are completely configurable.
+
+AdHerder will automatically track clicks on links and can track just about any desired behavior. Please see the FAQ section for information on how to track Facebook likes, Twitter follows and Mailchimp signups.
 
 == Installation ==
 
 Install through the admin interface, or manually in wp-content/plugins/adherder
 
-Once the plugin is enabled, a new post type will be available, called "Ad".
+Once AdHerder is enabled, a new post type will be available, called "Ad".
 Create at least one ad and add the AdHerder widget to your theme.
 
 == Frequently Asked Questions ==
@@ -102,12 +103,14 @@ In order to track Facebook likes, you need to use the XFBML version of the like 
 
 4. Publish and you're done
 
-= Can I force the plugin to display a certain ad? For testing? =
+= Can I force AdHerder to display a certain ad? For testing? =
 
 Yes you can. It is possible to override the automatic selection of ads. 
-Add a `ctopt_ad` parameter to the request. For instance, show the add with id 10:
+Add a `adherder_ad` parameter to the request. For instance, show the add with id 10:
 
     http://yoursite/?adherder_ad=10
+
+Want a nice button to do this more easily? Ask Tristan@grasshopperherder.com
 
 
 == Changelog ==
