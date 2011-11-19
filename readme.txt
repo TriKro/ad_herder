@@ -5,7 +5,7 @@ Donate link: http://grasshopperherder.com/
 Tags: plugin, widget, automatic, ad, manage
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 1.1
+Stable tag: 1.2
 
 == Description ==
 

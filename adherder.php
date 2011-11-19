@@ -3,7 +3,7 @@
 Plugin Name: AdHerder
 Plugin URI: http://grasshopperherder.com/
 Description: Displays call to actions, tracks their performance and optimizes placement
-Version: 1.0
+Version: 1.2
 Author: Tristan Kromer, Peter Backx
 Author URI: http://grasshopperherder.com/
 License: GPLv2
@@ -26,7 +26,7 @@ if ( !defined('ADHERDER_VERSION') ) {
 	define('ADHERDER_VERSION', 'adherder_version');
 }
 if ( !defined('ADHERDER_VERSION_NUM') ) {
-	define('ADHERDER_VERSION_NUM', '1.0');
+	define('ADHERDER_VERSION_NUM', '1.2');
 }
 add_option(ADHERDER_VERSION, ADHERDER_VERSION_NUM);
 
