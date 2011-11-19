@@ -118,19 +118,6 @@ jQuery(document).ready( function() {
   adherder_track_ads();
 });
 
-/**
- * old backwards compatibility code
- */
-function ctopt_track(callID) {
-	var oldPattern = /^http.*ctopt_track=([0-9]+)/;
-	var match      = oldPattern.exec(callID);
-	if(match != null) {
-		//using the old style url
-		callID = match[1];
-	}
-	adherder_track_conversion(callID);
-}
-
 function adherder_track_conversion(adId) {
 	jQuery.post(
 		AdHerder.ajaxurl,

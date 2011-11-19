@@ -13,9 +13,9 @@ AdHerder is an automated A/B advertisement testing platform. Create your ads and
 
 This means you can create any number of ads to display in a wordpress widget and AdHerder will perform the following functions:
 
-1) Keep track of which ads are converting well so that you can turn off poorly performing ads.
-2) Don't show the same user the same ad over and over. If they didn't click the 3rd time, they're not click the 5th.
-3) Don't show an ad the user has already clicked on. Show them something new.
+1. Keep track of which ads are converting well so that you can turn off poorly performing ads.
+2. Don't show the same user the same ad over and over. If they didn't click the 3rd time, they're not click the 5th.
+3. Don't show an ad the user has already clicked on. Show them something new.
 
 All behaviors are completely configurable.
 
