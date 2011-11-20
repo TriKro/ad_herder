@@ -56,8 +56,8 @@ function adherder_admin_init() {
 	add_settings_section('adherder_display_limit', 'Display limit', 'adherder_display_limit_text', 'edit.php?post_type=adherder_ad');
 	add_settings_field('adherder_seen_limit', 'Number', 'adherder_seen_limit_input', 'edit.php?post_type=adherder_ad', 'adherder_display_limit');
 
-	add_settings_section('adherder_track_logged_in_section', 'Track logged in users', 'adherder_track_logged_in_text', 'edit.php?post_type=adherder_ad');
-	add_settings_field('adherder_track_logged_in', 'Track logged in users?', 'adherder_track_logged_in_input', 'edit.php?post_type=adherder_ad', 'adherder_track_logged_in_section');
+	add_settings_section('adherder_track_logged_in_section', 'Track administrators', 'adherder_track_logged_in_text', 'edit.php?post_type=adherder_ad');
+	add_settings_field('adherder_track_logged_in', 'Track administrators?', 'adherder_track_logged_in_input', 'edit.php?post_type=adherder_ad', 'adherder_track_logged_in_section');
 
 	add_settings_section('adherder_ajax_widget_section', 'Use Ajax to display widget?', 'adherder_ajax_widget_section_text', 'edit.php?post_type=adherder_ad');
 	add_settings_field('adherder_ajax_widget', 'Use Ajax', 'adherder_ajax_widget_input', 'edit.php?post_type=adherder_ad', 'adherder_ajax_widget_section');
@@ -92,7 +92,7 @@ function adherder_seen_limit_input() {
 }
 
 function adherder_track_logged_in_text() {
-	echo '<p>When this option is disabled, AdHerder will not store tracking data or impressions/click counts for users that are logged in.</p>';
+	echo '<p>When this option is disabled, AdHerder will not store tracking data or impressions/click counts for administrators.</p>';
 }
 
 function adherder_track_logged_in_input() {

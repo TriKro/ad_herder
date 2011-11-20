@@ -50,16 +50,19 @@ function adherder_register_post_type() {
 	register_post_type('adherder_ad',$args);
 }
 
-function adherder_store_logged_in() {
+function hadherder_store_admin() {
   if(!is_user_logged_in()) {
     return true; // always track users that are not logged in
   }
+  if(!current_user_can('manage_options')) {
+	  return true; // also track users that aren't admins
+  }
   $options = get_option('adherder_options');
-  return $options['track_logged_in']; // only track logged in users when the option says so
+  return $options['track_logged_in']; // only track admins when the option says so
 }
 
 function adherder_store_impression($id) {
-	if (adherder_store_logged_in()) {
+	if (hadherder_store_admin()) {
 		if(get_post_custom_keys($id)&&in_array('adherder_impressions',get_post_custom_keys($id))){
 			$adherder_impressions = get_post_meta($id,'adherder_impressions',true);
 		}
@@ -74,7 +77,7 @@ function adherder_store_impression($id) {
 }
 
 function adherder_store_click($id) {
-	if (adherder_store_logged_in()) {
+	if (hadherder_store_admin()) {
 		if(get_post_custom_keys($id)&&in_array('adherder_clicks',get_post_custom_keys($id))){
 			$adherder_clicks = get_post_meta($id,'adherder_clicks',true);
 		}
