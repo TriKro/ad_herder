@@ -23,7 +23,7 @@ function adherder_register_post_type() {
 		'name' => __('Ads'),
 		'singular_name' => __('Ad'),
 		'add_new' => __('Add New'),
-		'add_new_item' => __('Add New Ad'),
+		'add_new_item' => __('Add New Ad (click help for FAQ)'),
 		'edit_item' => __('Edit Ad'),
 		'new_item' => __('New Ad'),
 		'view_item' => __('View Ad'),

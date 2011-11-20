@@ -34,6 +34,15 @@ function adherder_admin_menu() {
 
 	// add JavaScript for reporting only
 	add_action('load-'.$reportsMenu, 'adherder_report_scripts');
+	add_action('admin_print_styles-post-new.php', 'adherder_help_styles');
+}
+
+function adherder_help($contextual_help, $screen_id, $screen) {
+	if($screen_id == 'adherder_ad') {
+		include(plugin_dir_path(__FILE__).'/../template/help.php');
+		return '';
+	}
+	return $contextual_help;
 }
 
 function adherder_admin_init() {
@@ -157,6 +166,13 @@ function adherder_options_page() {
 function adherder_report_scripts() {
 	// the google chart API is used for reporting
 	wp_enqueue_script('google-jsapi', 'https://www.google.com/jsapi');
+}
+
+/**
+ * css for the help display
+ */
+function adherder_help_styles() {
+	wp_enqueue_style('adherder-help', plugins_url('/adherder/css/adherder-help.css'));
 }
 
 function adherder_reporting_page() {
