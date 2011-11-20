@@ -30,6 +30,11 @@ Create at least one ad and add the AdHerder widget to your theme.
 
 == Frequently Asked Questions ==
 
+= I'm always seeing the same ad. What's happening? =
+
+Most likely, you are using a caching plugin (for instance, W3 Total Cache). In that case,
+enable Ajax in the AdHerder options screen.
+
 = How does AdHerder select which ad to display? =
 
 AdHerder tracks the user behavior through a cookie. Based on this data the
@@ -51,22 +56,21 @@ at the url: `/wp-admin/post.php?post=7&action=edit`. In this case, the id is 7.
 
 = How do I track Twitter follows? =
 
-Tracking Twitter conversions (this only tracks people who click on follow and weren't already following you):
+Tracking Twitter conversions (this only tracks people who click on follow and weren't already following you).
+Use the following code:
 
-1. Start by creating your follow button at http://twitter.com/about/resources/followbutton
-2. Create a new call to action and switch the editor to HTML mode
-3. Paste the Twitter follow button code from step 1
-4. Save the call
-5. Below this, add the following:
+    <a href="<your twitter url>" class="twitter-follow-button" data-show-count="false">Follow me</a>
+    <script type="text/javascript">
+    jQuery.getScript("//platform.twitter.com/widgets.js", function() {
+      twttr.events.bind('follow', function(event) {
+        adherder_track_conversion(<ad-id);
+      });
+    });
+    </script>
 
-        <script type="text/javascript">
-        twttr.events.bind('follow', function(event) {
-          adherder_track_conversion(<call-id>);
-        });
-        </script>
-
-    In the URL you'll need to replace the URL with your blog url and the call-id with the id of the call.
-6. Update and you're done
+Don't forget to replace: 
+* <your twitter url> with the correct url to your Twitter profile. If you are unsure, you can get it from this page http://twitter.com/about/resources/followbutton
+* <ad-id> with the correct WordPress id of your ad (see above)
 
 = How do I track Mailchimp signups? =
 
@@ -89,19 +93,20 @@ Mailchimp signup tracking (tracks every one who receives the signup configuratin
 
 = How do I track Facebook likes? =
 
-In order to track Facebook likes, you need to use the XFBML version of the like button:
+In order to track Facebook likes, you need to use the XFBML version of the like button. Use the following code when creating your ad:
 
-1. Get a like button here: http://developers.facebook.com/docs/reference/plugins/like/
-2. When you click on "get code" copy and paste the XFBML version into a new call (again use the HTML view)
-3. Below the FB code, add the tracking code:
-
-        <script type="text/javascript">
+    <div id="fb-root"></div>
+    <fb:like send="false" layout="button_count" width="200" show_faces="true"></fb:like>
+    <script type="text/javascript">
+    jQuery.getScript('<facebook script url>', function() {
+        FB.init({ status: true, cookie: true, xfbml: true });
         FB.Event.subscribe('edge.create', function(response) {
-          adherder_track_conversion(<call-id>);
+          adherder_track_conversion(<ad-id>);
         });
-        </script>
+    });
+    </script>
 
-4. Publish and you're done
+You may need to change the "fb:like" section to suite your preferences. The easiest way to get it right is to get the code from: http://developers.facebook.com/docs/reference/plugins/like/
 
 = Can I force AdHerder to display a certain ad? For testing? =
 
