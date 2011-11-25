@@ -34,11 +34,11 @@ function adherder_admin_menu() {
 
 	// add JavaScript for reporting only
 	add_action('load-'.$reportsMenu, 'adherder_report_scripts');
-	add_action('admin_print_styles-post-new.php', 'adherder_help_styles');
+	add_action('admin_print_styles', 'adherder_help_styles');
 }
 
 function adherder_help($contextual_help, $screen_id, $screen) {
-	if($screen_id == 'adherder_ad') {
+	if(strstr($screen_id,'adherder_ad')) {
 		include(plugin_dir_path(__FILE__).'/../template/help.php');
 		return '';
 	}
