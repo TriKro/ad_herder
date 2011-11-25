@@ -120,6 +120,16 @@ Want a nice button to do this more easily? Ask Tristan@grasshopperherder.com
 
 == Changelog ==
 
+= Version 1.2 =
+
+* More robust JavaScript
+* Changed Twitter & Facebook help so it also works with Ajax version
+* Added help on the new ad screen
+
+= Version 1.1 =
+
+* Minimal update to correctly reference authors
+
 = Version 1.0 =
 
 * Initial version.
