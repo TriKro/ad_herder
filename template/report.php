@@ -69,6 +69,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         data.addColumn('number', 'Impressions');
         data.addColumn('number', 'Clicks');
         data.addColumn('number', 'Conversion %');
+        data.addColumn('number', 'Confidence %');
+        data.addColumn('boolean', 'Relevant?');
         data.addColumn('string', 'Status (click to switch)');
         data.addColumn('string', 'Clear history');
         data.addRows(<?php echo count($reports); ?>);
@@ -81,6 +83,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           echo "data.setValue(" . $count . ", 3,  " . $report->impressions . ");\n";
           echo "data.setValue(" . $count . ", 4,  " . $report->clicks . ");\n";
           echo "data.setValue(" . $count . ", 5,  " . $report->conversion . ");\n";
+          echo "data.setValue(" . $count . ", 6,  " . $report->confidence . ");\n";
+          echo "data.setValue(" . $count . ", 7,  " . ($report->relevant ? "true" : "false"). ");\n";
           $switchValue = "";
           switch($report->post_status) {
             case 'publish' : $switchValue = 'Online'; break;
@@ -89,9 +93,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           if($switchValue != "") {
             $switchValue = '<a href="#" class="button-secondary" onclick="switchStatus(' . $report->id . ')">' . $switchValue . '</a>';
           }
-          echo "data.setValue(" . $count . ", 6,  '" . $switchValue . "');\n";
+          echo "data.setValue(" . $count . ", 8,  '" . $switchValue . "');\n";
           $clearValue = '<a class="button-secondary" href="#" onclick="clearHistory(' . $report->id . ')">remove data</a>';
-          echo "data.setValue(" . $count . ", 7,  '" . $clearValue . "');\n";
+          echo "data.setValue(" . $count . ", 9,  '" . $clearValue . "');\n";
           
           $count++;
         } ?>

@@ -107,12 +107,34 @@ function adherder_database_find_reports() {
       FROM wp_posts p WHERE post_type = 'adherder_ad'");
     foreach($reports as $report) {
       $conversion = 0;
+      $confidence = 0;
       if($report->impressions != '0') {
         $conversion = ($report->clicks * 100) / $report->impressions;
         $conversion = round($conversion, 2);
+        
+        $confidence = sqrt(($conversion * (100 - $conversion)) / $report->impressions);
+        $confidence = round($confidence, 2);
       }
       $report->conversion = $conversion;
+      $report->confidence = $confidence;
     }
+    
+    //calculate relevance
+    foreach($reports as $report) {
+		$relevant = true;
+		foreach($reports as $comp_report) {
+			if($report->id == $comp_report->id) {
+				continue;
+			}
+			$diff      = abs($comp_report->conversion - $report->conversion);
+			$conf_diff = $comp_report->confidence + $report->confidence;
+			
+			if($diff <= $conf_diff) {
+				$relevant = false;
+			}
+		}
+		$report->relevant = $relevant;
+	}
     return $reports;
 }
 ?>
