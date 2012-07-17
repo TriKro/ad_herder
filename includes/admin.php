@@ -200,6 +200,16 @@ function adherder_reporting_page() {
       $message = 'The ad id you entered is incorrect.';
     }
   }
+  if(isset($_POST['adherder_switch_report_ad_id'])) {
+	  $ad_id        = $_POST['adherder_switch_report_ad_id'];
+	  $ad_in_report = get_post_meta($ad_id, 'adherder_in_report', true);
+	  if(empty($ad_in_report)) {
+		  $ad_in_report = 0;
+	  }
+	  update_post_meta($ad_id, 'adherder_in_report', !$ad_in_report);
+	  
+	  $message = "Reporting status switched for ad with id $ad_id";
+  }
   if(isset($_POST['adherder_clear_history'])) {
     $ad_id   = $_POST['adherder_clear_ad_id'];
     $ad_post = get_post($ad_id);

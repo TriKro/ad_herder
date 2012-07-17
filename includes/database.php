@@ -103,7 +103,8 @@ function adherder_database_find_reports() {
     $reports = $wpdb->get_results("SELECT 
       id, post_title, post_status, 
       IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'adherder_impressions'),0) as impressions, 
-      IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'adherder_clicks'), 0) as clicks 
+      IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'adherder_clicks'), 0) as clicks, 
+      IFNULL((select meta_value from wp_postmeta where post_id = id and meta_key = 'adherder_in_report'), 0) as in_report
       FROM wp_posts p WHERE post_type = 'adherder_ad'");
     foreach($reports as $report) {
       $conversion = 0;
@@ -121,6 +122,10 @@ function adherder_database_find_reports() {
     
     //calculate relevance
     foreach($reports as $report) {
+		if(!$report->in_report) {
+			$report->relevant = "null";
+			continue;
+		}
 		$relevant = true;
 		foreach($reports as $comp_report) {
 			if($report->id == $comp_report->id) {
@@ -133,7 +138,7 @@ function adherder_database_find_reports() {
 				$relevant = false;
 			}
 		}
-		$report->relevant = $relevant;
+		$report->relevant = $relevant ? "true" : "false";
 	}
     return $reports;
 }

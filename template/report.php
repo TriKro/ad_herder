@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		<table>
 			<tr>
 				<td style="width: 300px; vertical-align: top;">
+					<div id="control-report"></div>
 					<div id="control-status"></div>
 					<div id="control-impressions"></div>
 					<div id="control-clicks"></div>
@@ -48,6 +49,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	<form id="adherder_switch_status" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 		<input type="hidden" name="adherder_switch_ad_id" id="adherder_switch_ad_id" />
 		<input type="hidden" name="adherder_switch_status" />
+	</form>
+	<form id="adherder_switch_report" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="adherder_switch_report_ad_id" id="adherder_switch_report_ad_id" />
 	</form>
 	<form id="adherder_clear_history" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 		<input type="hidden" name="adherder_clear_ad_id" id="adherder_clear_ad_id" />
@@ -71,8 +75,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         data.addColumn('number', 'Conversion %');
         data.addColumn('number', 'Confidence %');
         data.addColumn('boolean', 'Relevant?');
-        data.addColumn('string', 'Status (click to switch)');
-        data.addColumn('string', 'Clear history');
+        data.addColumn('string', 'Report?');
+        data.addColumn('string', 'Online?');
+        data.addColumn('string', 'Clear data');
+        data.addColumn('string', 'In Report Data?');
         data.addRows(<?php echo count($reports); ?>);
         <?php 
         $count = 0;
@@ -84,21 +90,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           echo "data.setValue(" . $count . ", 4,  " . $report->clicks . ");\n";
           echo "data.setValue(" . $count . ", 5,  " . $report->conversion . ");\n";
           echo "data.setValue(" . $count . ", 6,  " . $report->confidence . ");\n";
-          echo "data.setValue(" . $count . ", 7,  " . ($report->relevant ? "true" : "false"). ");\n";
+          echo "data.setValue(" . $count . ", 7,  " . $report->relevant . ");\n";
+          $switchValue = $report->in_report ? 'checked="checked"' : '';
+          $switchValue = '<input type="checkbox" ' . $switchValue . ' onclick="switchReport(' . $report->id . ')">';
+          echo "data.setValue(" . $count . ", 8,  '" . $switchValue . "');\n";
           $switchValue = "";
           switch($report->post_status) {
-            case 'publish' : $switchValue = 'Online'; break;
-            case 'pending' : $switchValue = 'Offline'; break;
+            case 'publish' : $switchValue = 'checked="checked"'; break;
+            case 'pending' : $switchValue = ''; break;
           }
-          if($switchValue != "") {
-            $switchValue = '<a href="#" class="button-secondary" onclick="switchStatus(' . $report->id . ')">' . $switchValue . '</a>';
+          if($report->post_status == "publish" || $report->post_status == "pending") {
+            $switchValue = '<input type="checkbox" ' . $switchValue . ' onclick="switchStatus(' . $report->id . ')">';
           }
-          echo "data.setValue(" . $count . ", 8,  '" . $switchValue . "');\n";
-          $clearValue = '<a class="button-secondary" href="#" onclick="clearHistory(' . $report->id . ')">remove data</a>';
-          echo "data.setValue(" . $count . ", 9,  '" . $clearValue . "');\n";
-          
+          echo "data.setValue(" . $count . ", 9,  '" . $switchValue . "');\n";
+          $clearValue = '<input type="checkbox" onclick="clearHistory(' . $report->id . ')">';
+          echo "data.setValue(" . $count . ", 10, '" . $clearValue . "');\n";
+          echo "data.setValue(" . $count . ", 11, '" . ($report->in_report?"Yes":"No") . "');\n";
           $count++;
         } ?>
+
+		var reportPicker = new google.visualization.ControlWrapper({
+			'controlType': 'CategoryFilter',
+			'containerId': 'control-report',
+			'options'    : {
+				'filterColumnLabel': 'In Report Data?',
+				'ui': {
+					'labelStacking'  : 'vertical',
+					'allowTyping'    : false,
+					'allowMultiple'  : false
+				}
+			},
+			'state': { 'selectedValues' : ['Yes'] }
+		});
 
         var statusPicker = new google.visualization.ControlWrapper({
           'controlType': 'CategoryFilter',
@@ -110,8 +133,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
               'allowTyping'    : false,
               'allowMultiple'  : false
             }
-          },
-          'state': { 'selectedValues' : ['publish'] }
+          }
         });
 
         var impressionsSlider = new google.visualization.ControlWrapper({
@@ -150,21 +172,29 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           'containerId': 'chart-legend',
           'options'    : {
             'allowHtml'     : true
+          },
+          'view'       : {
+            'columns'  : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
           }
         });
 
         new google.visualization.Dashboard(document.getElementById('dashboard'))
-          .bind([statusPicker, impressionsSlider, clicksSlider], [table, chart])
+          .bind([reportPicker, statusPicker, impressionsSlider, clicksSlider], [table, chart])
           .draw(data);
       }
-      function switchStatus(callId) {
-        if(!callId) return;
-        jQuery('#adherder_switch_ad_id').val(callId);
+      function switchStatus(adId) {
+        if(!adId) return;
+        jQuery('#adherder_switch_ad_id').val(adId);
         jQuery('#adherder_switch_status').submit();
       }
-      function clearHistory(callId) {
-        if(!callId) return;
-        jQuery('#adherder_clear_ad_id').val(callId);
+      function switchReport(adId) {
+		  if(!adId) return;
+		  jQuery('#adherder_switch_report_ad_id').val(adId);
+		  jQuery('#adherder_switch_report').submit();		  
+	  }
+      function clearHistory(adId) {
+        if(!adId) return;
+        jQuery('#adherder_clear_ad_id').val(adId);
         jQuery('#adherder_clear_history').submit();
       }
 </script>
