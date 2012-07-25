@@ -112,6 +112,9 @@ function adherder_database_find_reports() {
       if($report->impressions != '0') {
         $conversion = ($report->clicks * 100) / $report->impressions;
         $conversion = round($conversion, 2);
+        if($conversion > 100) {
+			$conversion = 100; // filter out edge cases
+		}
         
         $confidence = sqrt(($conversion * (100 - $conversion)) / $report->impressions);
         $confidence = round($confidence, 2);
