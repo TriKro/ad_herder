@@ -131,7 +131,7 @@ function adherder_database_find_reports() {
 		}
 		$relevant = true;
 		foreach($reports as $comp_report) {
-			if($report->id == $comp_report->id) {
+			if($report->id == $comp_report->id || !$comp_report->in_report) {
 				continue;
 			}
 			$diff      = abs($comp_report->conversion - $report->conversion);
