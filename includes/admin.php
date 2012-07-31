@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 function adherder_admin_menu() {
 	// add options and reporting menu items.
 	$reportsMenu = add_submenu_page('edit.php?post_type=adherder_ad', 'Ad Herder reports', 'Reports', 'edit_posts', 'co-reporting-menu', 'adherder_reporting_page');
-	add_submenu_page('edit.php?post_type=adherder_ad', 'AdHerder Options', 'Options', 'manage_options', 'adherder_options', 'adherder_options_page');
+	$optionsMenu = add_submenu_page('edit.php?post_type=adherder_ad', 'AdHerder Options', 'Options', 'manage_options', 'adherder_options', 'adherder_options_page');
 
 	// customize the columns in the admin interface
 	add_filter('manage_edit-adherder_ad_sortable_columns', 'adherder_column_register_sortable');
@@ -35,6 +35,23 @@ function adherder_admin_menu() {
 	// add JavaScript for reporting only
 	add_action('load-'.$reportsMenu, 'adherder_report_scripts');
 	add_action('admin_print_styles', 'adherder_help_styles');
+	
+	add_action('load-'.$reportsMenu, 'adherder_help_switch');
+	add_action('load-'.$optionsMenu, 'adherder_help_switch');
+}
+
+function adherder_help_switch() {
+	$screen = get_current_screen();
+	//old style of help menu
+	if(!method_exists($screen, 'add_help_tab')) {
+		add_action('contextual_help', 'adherder_help', 10, 3);
+	} else {
+		$screen->add_help_tab(array(
+			'id' => 'adherder-help',
+			'title' => 'FAQ',
+			'callback' => adherder_help_new
+		));
+	}
 }
 
 function adherder_help($contextual_help, $screen_id, $screen) {
@@ -43,6 +60,10 @@ function adherder_help($contextual_help, $screen_id, $screen) {
 		return '';
 	}
 	return $contextual_help;
+}
+
+function adherder_help_new() {
+	include(plugin_dir_path(__FILE__).'/../template/help.php');
 }
 
 function adherder_admin_init() {

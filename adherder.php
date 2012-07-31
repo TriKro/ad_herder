@@ -54,7 +54,6 @@ if ( is_admin() ) {
 	require_once(plugin_dir_path(__FILE__).'/includes/admin.php' );
 	add_action('admin_menu', 'adherder_admin_menu');
 	add_action('admin_init', 'adherder_admin_init');
-	add_action('contextual_help', 'adherder_help', 10, 3);
 }
 
 // install click tracking database table on activation
