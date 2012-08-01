@@ -40,22 +40,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 			</tr>
 			<tr>
 				<td colspan="2">
+					<select>
+						<option value="none">Bulk Actions</option>
+						<option value="publish">Publish</option>
+						<option value="pending">Unpublish</option>
+						<option value="in_report">Include in report</option>
+						<option value="not_in_report">Remove from report</option>
+						<option value="clear_data">Clear data</option>
+					</select>
+					<button class="button-secondary apply-bulk" >Apply</button><br/>
 					<div id="chart-legend"></div>
+					<select>
+						<option value="none">Bulk Actions</option>
+						<option value="publish">Publish</option>
+						<option value="pending">Unpublish</option>
+						<option value="in_report">Include in report</option>
+						<option value="not_in_report">Remove from report</option>
+						<option value="clear_data">Clear data</option>
+					</select>
+					<button class="button-secondary apply-bulk" >Apply</button><br/>
 				</td>
 			</tr>
 		</table>
 	</div>
 	
-	<form id="adherder_switch_status" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<input type="hidden" name="adherder_switch_ad_id" id="adherder_switch_ad_id" />
-		<input type="hidden" name="adherder_switch_status" />
-	</form>
-	<form id="adherder_switch_report" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<input type="hidden" name="adherder_switch_report_ad_id" id="adherder_switch_report_ad_id" />
-	</form>
-	<form id="adherder_clear_history" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<input type="hidden" name="adherder_clear_ad_id" id="adherder_clear_ad_id" />
-		<input type="hidden" name="adherder_clear_history" />
+	<form id="adherder_bulk_action_form" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="adherder_bulk_ad_ids" id="adherder_bulk_ad_ids" />
+		<input type="hidden" name="adherder_bulk_action" id="adherder_bulk_action" />
 	</form>
 	<form id="adherder_cleanup_old_data" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 		<p><input type="submit" name="adherder_cleanup_old_data" value="Clean up old impression tracking data" class="button-secondary" /></p>
@@ -75,9 +86,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         data.addColumn('number', 'Conversion %');
         data.addColumn('number', 'Confidence %');
         data.addColumn('boolean', 'Relevant?');
-        data.addColumn('string', 'Report?');
-        data.addColumn('string', 'Online?');
-        data.addColumn('string', 'Clear data');
         data.addColumn('string', 'In Report Data?');
         data.addRows(<?php echo count($reports); ?>);
         <?php 
@@ -91,21 +99,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           echo "data.setValue(" . $count . ", 5,  " . $report->conversion . ");\n";
           echo "data.setValue(" . $count . ", 6,  " . $report->confidence . ");\n";
           echo "data.setValue(" . $count . ", 7,  " . $report->relevant . ");\n";
-          $switchValue = $report->in_report ? 'checked="checked"' : '';
-          $switchValue = '<input type="checkbox" ' . $switchValue . ' onclick="switchReport(' . $report->id . ')">';
-          echo "data.setValue(" . $count . ", 8,  '" . $switchValue . "');\n";
-          $switchValue = "";
-          switch($report->post_status) {
-            case 'publish' : $switchValue = 'checked="checked"'; break;
-            case 'pending' : $switchValue = ''; break;
-          }
-          if($report->post_status == "publish" || $report->post_status == "pending") {
-            $switchValue = '<input type="checkbox" ' . $switchValue . ' onclick="switchStatus(' . $report->id . ')">';
-          }
-          echo "data.setValue(" . $count . ", 9,  '" . $switchValue . "');\n";
-          $clearValue = '<input type="checkbox" onclick="clearHistory(' . $report->id . ')">';
-          echo "data.setValue(" . $count . ", 10, '" . $clearValue . "');\n";
-          echo "data.setValue(" . $count . ", 11, '" . ($report->in_report?"Yes":"No") . "');\n";
+          echo "data.setValue(" . $count . ", 8, '" . ($report->in_report?"Yes":"No") . "');\n";
           $count++;
         } ?>
 
@@ -174,7 +168,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
             'allowHtml'     : true
           },
           'view'       : {
-            'columns'  : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            'columns'  : [0, 1, 2, 3, 4, 5, 6, 7]
           }
         });
 
@@ -182,20 +176,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           .bind([reportPicker, statusPicker, impressionsSlider, clicksSlider], [table, chart])
           .draw(data);
       }
-      function switchStatus(adId) {
-        if(!adId) return;
-        jQuery('#adherder_switch_ad_id').val(adId);
-        jQuery('#adherder_switch_status').submit();
-      }
-      function switchReport(adId) {
-		  if(!adId) return;
-		  jQuery('#adherder_switch_report_ad_id').val(adId);
-		  jQuery('#adherder_switch_report').submit();		  
-	  }
-      function clearHistory(adId) {
-        if(!adId) return;
-        jQuery('#adherder_clear_ad_id').val(adId);
-        jQuery('#adherder_clear_history').submit();
-      }
+      jQuery(document).ready(function($) {
+		  $('.apply-bulk').click(function() {
+			  var action = $(this).prev().val();
+			  $('#adherder_bulk_action').val(action);
+			  if("none" != action) {
+				  var selection = table.getChart().getSelection();
+				  if(selection.length != 0) {
+					  var ids = "";
+					  $.each(selection, function(i, obj) {
+						  if(i!=0) {
+							  ids += ',';
+						  }
+						  ids += table.getDataTable().getValue(obj.row,0);
+					  });
+					  $('#adherder_bulk_ad_ids').val(ids);
+					  $('#adherder_bulk_action_form').submit();
+				  }
+			  }
+		  });
+	  });
 </script>
 </div>

@@ -198,51 +198,47 @@ function adherder_help_styles() {
 
 function adherder_reporting_page() {
   $message = ''; 
-  if(isset($_POST['adherder_switch_status'])) {
-    $ad_id   = $_POST['adherder_switch_ad_id'];
-    $ad_post = get_post($ad_id);
-    if($ad_post && $ad_post->post_type == 'adherder_ad') {
-      $post_update       = array();
-      $post_update['ID'] = $ad_id;
-      $post_changed      = false;
-      if($ad_post->post_status == 'publish') {
-        $post_update['post_status'] = 'pending';
-        $post_changed = true;
-      } else if($ad_post->post_status == 'pending') {
-        $post_update['post_status'] = 'publish';
-        $post_changed = true;
-      } else {
-        $message = 'The call id is not in status pending or publish, status was not updated.';
-      }
-      if($post_changed) {
-        wp_update_post($post_update);
-      }
-    } else {
-      $message = 'The ad id you entered is incorrect.';
-    }
+//---------------
+  if(isset($_POST['adherder_bulk_action'])) {
+    $ad_ids = explode(',',$_POST['adherder_bulk_ad_ids']);
+    $action = $_POST['adherder_bulk_action'];
+    foreach ($ad_ids as $ad_id) {
+		if($action === 'publish' || $action === 'pending') {
+			$ad_post = get_post($ad_id);
+			if($ad_post && $ad_post->post_type == 'adherder_ad') {
+				$post_update       = array();
+				$post_update['ID'] = $ad_id;
+				$post_changed      = false;
+				if($ad_post->post_status == 'publish' && $action === 'pending') {
+					$post_update['post_status'] = 'pending';
+					$post_changed = true;
+				} else if($ad_post->post_status == 'pending' && $action === 'publish') {
+					$post_update['post_status'] = 'publish';
+					$post_changed = true;
+				}
+				if($post_changed) {
+					wp_update_post($post_update);
+				}
+			} else {
+				$message .= "Ad id $ad_id is incorrect.<br/>";
+			}
+		}
+		if($action === 'in_report' || $action === 'not_in_report') {
+			$ad_in_report = get_post_meta($ad_id, 'adherder_in_report', true);
+			update_post_meta($ad_id, 'adherder_in_report', ($action === 'in_report' ? 1 : 0));
+		}
+		if($action === 'clear_data') {
+			$ad_post = get_post($ad_id);
+			if($ad_post && $ad_post->post_type == 'adherder_ad') {
+				adherder_database_clean_for_post($ad_id);
+				update_post_meta($ad_id, 'adherder_impressions', 0);
+				update_post_meta($ad_id, 'adherder_clicks', 0);
+				$message = 'Cleared all data for ad with id ' . $ad_id;
+			}
+		}
+	}
   }
-  if(isset($_POST['adherder_switch_report_ad_id'])) {
-	  $ad_id        = $_POST['adherder_switch_report_ad_id'];
-	  $ad_in_report = get_post_meta($ad_id, 'adherder_in_report', true);
-	  if(empty($ad_in_report)) {
-		  $ad_in_report = 0;
-	  }
-	  update_post_meta($ad_id, 'adherder_in_report', !$ad_in_report);
-	  
-	  $message = "Reporting status switched for ad with id $ad_id";
-  }
-  if(isset($_POST['adherder_clear_history'])) {
-    $ad_id   = $_POST['adherder_clear_ad_id'];
-    $ad_post = get_post($ad_id);
-    if($ad_post && $ad_post->post_type == 'adherder_ad') {
-      adherder_database_clean_for_post($ad_id);
-      update_post_meta($ad_id, 'adherder_impressions', 0);
-      update_post_meta($ad_id, 'adherder_clicks', 0);
-      $message = 'Cleared all data for ad with id ' . $ad_id;
-    } else {
-      $message = 'Id ' . $ad_id . ' is not a valid ad id'; 
-    }
-  }
+//---------------
   if(isset($_POST['adherder_cleanup_old_data'])) {
     adherder_database_clean();
     $message = 'Older impression data cleared';
