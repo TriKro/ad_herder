@@ -26,56 +26,64 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 	?>
 	
 	<div id="dashboard">
-		<table>
-			<tr>
-				<td style="width: 300px; vertical-align: top;">
+		<div style="display:none;">
 					<div id="control-report"></div>
 					<div id="control-status"></div>
-					<div id="control-impressions"></div>
-					<div id="control-clicks"></div>
-				</td>
-				<td>
-					<div id="chart-report"></div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<select>
-						<option value="none">Bulk Actions</option>
-						<option value="publish">Publish</option>
-						<option value="pending">Unpublish</option>
-						<option value="in_report">Include in report</option>
-						<option value="not_in_report">Remove from report</option>
-						<option value="clear_data">Clear data</option>
-					</select>
-					<button class="button-secondary apply-bulk" >Apply</button><br/>
-					<div id="chart-legend"></div>
-					<select>
-						<option value="none">Bulk Actions</option>
-						<option value="publish">Publish</option>
-						<option value="pending">Unpublish</option>
-						<option value="in_report">Include in report</option>
-						<option value="not_in_report">Remove from report</option>
-						<option value="clear_data">Clear data</option>
-					</select>
-					<button class="button-secondary apply-bulk" >Apply</button><br/>
-				</td>
-			</tr>
-		</table>
+		</div>
+		<div>
+			<div id="chart-report"></div>
+		</div>
+		<div>
+			<div class="tablenav top">
+			<div class="alignleft actions">
+			<select>
+				<option value="none">Bulk Actions</option>
+				<option value="publish">Publish</option>
+				<option value="pending">Unpublish</option>
+				<option value="in_report">Include in report</option>
+				<option value="not_in_report">Remove from report</option>
+				<option value="clear_data">Clear data</option>
+			</select>
+			<button class="button-secondary apply-bulk" >Apply</button><br/>
+			</div>
+			<div class="alignleft actions">
+			<select>
+				<option value="report">Report</option>
+				<option value="all">All</option>
+				<option value="published">Published</option>
+				<option value="unpublished">Unpublished</option>
+			</select>
+			<button class="button-secondary apply-filter" >Filter</button><br/>
+			</div>
+			</div>			
+			
+			<div id="chart-legend"></div>
+
+			<div class="tablenav bottom">
+			<div class="alignleft actions">
+			<select>
+				<option value="none">Bulk Actions</option>
+				<option value="publish">Publish</option>
+				<option value="pending">Unpublish</option>
+				<option value="in_report">Include in report</option>
+				<option value="not_in_report">Remove from report</option>
+				<option value="clear_data">Clear data</option>
+			</select>
+			<button class="button-secondary apply-bulk" >Apply</button><br/>
+			</div>
+			</div>
+		</div>
 	</div>
 	
 	<form id="adherder_bulk_action_form" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 		<input type="hidden" name="adherder_bulk_ad_ids" id="adherder_bulk_ad_ids" />
 		<input type="hidden" name="adherder_bulk_action" id="adherder_bulk_action" />
 	</form>
-	<form id="adherder_cleanup_old_data" method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-		<p><input type="submit" name="adherder_cleanup_old_data" value="Clean up old impression tracking data" class="button-secondary" /></p>
-	</form>
 	
 <script type="text/javascript">
       google.load("visualization", "1.1", {packages:["corechart", "table", "controls"]});
       google.setOnLoadCallback(drawChart);
-      var table, data;
+      var table, data, reportPicker, statusPicker;
       function drawChart() {
         data = new google.visualization.DataTable();
         data.addColumn('string', 'Ad id');
@@ -103,7 +111,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           $count++;
         } ?>
 
-		var reportPicker = new google.visualization.ControlWrapper({
+		reportPicker = new google.visualization.ControlWrapper({
 			'controlType': 'CategoryFilter',
 			'containerId': 'control-report',
 			'options'    : {
@@ -111,13 +119,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 				'ui': {
 					'labelStacking'  : 'vertical',
 					'allowTyping'    : false,
-					'allowMultiple'  : false
 				}
 			},
 			'state': { 'selectedValues' : ['Yes'] }
 		});
 
-        var statusPicker = new google.visualization.ControlWrapper({
+        statusPicker = new google.visualization.ControlWrapper({
           'controlType': 'CategoryFilter',
           'containerId': 'control-status',
           'options'    : {
@@ -125,26 +132,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
             'ui': {
               'labelStacking'  : 'vertical',
               'allowTyping'    : false,
-              'allowMultiple'  : false
             }
-          }
-        });
-
-        var impressionsSlider = new google.visualization.ControlWrapper({
-          'controlType': 'NumberRangeFilter',
-          'containerId': 'control-impressions',
-          'options': {
-            'filterColumnLabel': 'Impressions',
-            'ui': {'labelStacking': 'vertical'}
-          }
-        });
-
-        var clicksSlider = new google.visualization.ControlWrapper({
-          'controlType': 'NumberRangeFilter',
-          'containerId': 'control-clicks',
-          'options': {
-            'filterColumnLabel': 'Clicks',
-            'ui': {'labelStacking': 'vertical'}
           }
         });
 
@@ -157,7 +145,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
             'title'    : 'Ad engagement',
           },
           'view'       : {
-            'columns'  : [0, 3, 4]
+            'columns'  : [0, 5]
           }
         });
 
@@ -173,7 +161,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         });
 
         new google.visualization.Dashboard(document.getElementById('dashboard'))
-          .bind([reportPicker, statusPicker, impressionsSlider, clicksSlider], [table, chart])
+          .bind([reportPicker, statusPicker], [table, chart])
           .draw(data);
       }
       jQuery(document).ready(function($) {
@@ -195,6 +183,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 				  }
 			  }
 		  });
+		  
+			$('.apply-filter').click(function() {
+				var filter = $(this).prev().val();
+				switch(filter) {
+					case "report":
+						reportPicker.setState({'selectedValues':['Yes']});
+						statusPicker.setState({'selectedValues':[]});
+						break;
+					case "all":
+						reportPicker.setState({'selectedValues':[]});
+						statusPicker.setState({'selectedValues':[]});
+						break;
+					case "published":
+						reportPicker.setState({'selectedValues':[]});
+						statusPicker.setState({'selectedValues':['publish']});
+						break;
+					case "unpublished":
+						reportPicker.setState({'selectedValues':[]});
+						statusPicker.setState({'selectedValues':['pending']});
+						break;
+				}
+				reportPicker.draw();
+				statusPicker.draw();
+			});
 	  });
 </script>
 </div>

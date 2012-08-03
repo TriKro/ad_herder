@@ -27,4 +27,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		?>
 		<input name="Submit" type="submit" value="Save Changes" class="button-primary" />
 	</form>
+	<!-- form id="adherder_cleanup_old_data" method="post" action="edit.php?post_type=adherder_ad&page=adherder_options" style="float: left; width: 70%">
+		<p>If ad serving becomes sluggish, you may want to remove all data older than 30 days.</p>
+		<input type="submit" name="adherder_cleanup_old_data" value="Clean up old tracking data" class="button-secondary" />
+	</form -->
 </div>

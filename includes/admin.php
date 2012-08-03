@@ -177,7 +177,7 @@ function adherder_validate_options( $input ) {
 }
 
 function adherder_options_page() {
-  include(plugin_dir_path(__FILE__).'/../template/options.php');
+	include(plugin_dir_path(__FILE__).'/../template/options.php');
 }
 
 /**
@@ -198,7 +198,6 @@ function adherder_help_styles() {
 
 function adherder_reporting_page() {
   $message = ''; 
-//---------------
   if(isset($_POST['adherder_bulk_action'])) {
     $ad_ids = explode(',',$_POST['adherder_bulk_ad_ids']);
     $action = $_POST['adherder_bulk_action'];
@@ -238,11 +237,11 @@ function adherder_reporting_page() {
 		}
 	}
   }
-//---------------
-  if(isset($_POST['adherder_cleanup_old_data'])) {
-    adherder_database_clean();
-    $message = 'Older impression data cleared';
-  }
+/*	if(isset($_POST['adherder_cleanup_old_data'])) {
+		adherder_database_clean();
+		$message = 'Older impression data cleared';
+		return array();
+	} */
   $reports = adherder_database_find_reports();
   include(plugin_dir_path(__FILE__).'/../template/report.php');
 }
