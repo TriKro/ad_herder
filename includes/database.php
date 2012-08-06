@@ -127,6 +127,10 @@ function adherder_database_find_reports() {
     foreach($reports as $report) {
 		if(!$report->in_report) {
 			$report->relevant = "null";
+			$report->min = "null";
+			$report->max = "null";
+			$report->opening = "null";
+			$report->closing = "null";
 			continue;
 		}
 		$relevant = true;
@@ -142,6 +146,17 @@ function adherder_database_find_reports() {
 			}
 		}
 		$report->relevant = $relevant ? "true" : "false";
+		
+		$report->min = $report->conversion - $report->confidence;
+		$report->max = $report->conversion + $report->confidence;
+		if($relevant) {
+			echo("relevant");
+			$report->opening = $report->min;
+			$report->closing = $report->max;
+		} else {
+			$report->opening = $report->max;
+			$report->closing = $report->min;
+		}
 	}
     return $reports;
 }

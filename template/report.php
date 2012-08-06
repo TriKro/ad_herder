@@ -95,6 +95,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         data.addColumn('number', 'Confidence %');
         data.addColumn('boolean', 'Relevant?');
         data.addColumn('string', 'In Report Data?');
+        data.addColumn('number', 'min');
+        data.addColumn('number', 'max');
+        data.addColumn('number', 'opening');
+        data.addColumn('number', 'closing');
         data.addRows(<?php echo count($reports); ?>);
         <?php 
         $count = 0;
@@ -108,6 +112,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           echo "data.setValue(" . $count . ", 6,  " . $report->confidence . ");\n";
           echo "data.setValue(" . $count . ", 7,  " . $report->relevant . ");\n";
           echo "data.setValue(" . $count . ", 8, '" . ($report->in_report?"Yes":"No") . "');\n";
+          echo "data.setValue(" . $count . ", 9,  " . $report->min . ");\n";
+          echo "data.setValue(" . $count . ",10,  " . $report->max . ");\n";
+          echo "data.setValue(" . $count . ",11,  " . $report->opening . ");\n";
+          echo "data.setValue(" . $count . ",12,  " . $report->closing . ");\n";
           $count++;
         } ?>
 
@@ -137,15 +145,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         });
 
         var chart = new google.visualization.ChartWrapper({
-          'chartType'  : 'ColumnChart',
+          'chartType'  : 'CandlestickChart',
           'containerId': 'chart-report',
           'options'    : {
             'width'    : 400,
             'height'   : 240,
             'title'    : 'Ad engagement',
+			'candlestick': {
+			  'fallingColor' : { 
+				'fill'   : '#FF0000', 
+				'stroke' : '#FF0000', 
+			  },
+			},
           },
           'view'       : {
-            'columns'  : [0, 5]
+            'columns'  : [0, 9, 11, 12, 10]
           }
         });
 
