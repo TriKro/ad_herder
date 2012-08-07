@@ -151,10 +151,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
             'width'    : 400,
             'height'   : 240,
             'title'    : 'Ad engagement',
+            'legend'   : 'none',
 			'candlestick': {
 			  'fallingColor' : { 
 				'fill'   : '#FF0000', 
 				'stroke' : '#FF0000', 
+			  },
+			  'risingColor' : { 
+				'fill'   : '#00FF00', 
+				'stroke' : '#00FF00', 
 			  },
 			},
           },
