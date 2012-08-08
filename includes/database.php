@@ -150,7 +150,6 @@ function adherder_database_find_reports() {
 		$report->min = $report->conversion - $report->confidence;
 		$report->max = $report->conversion + $report->confidence;
 		if($relevant) {
-			echo("relevant");
 			$report->opening = $report->min;
 			$report->closing = $report->max;
 		} else {

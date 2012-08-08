@@ -144,8 +144,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
           }
         });
 
+        var in_report_rows = data.getFilteredRows([{column: 8, value: 'Yes'}]);
         var chart = new google.visualization.ChartWrapper({
           'chartType'  : 'CandlestickChart',
+          'dataTable'  : data, 
           'containerId': 'chart-report',
           'options'    : {
             'width'    : 400,
@@ -164,7 +166,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 			},
           },
           'view'       : {
-            'columns'  : [0, 9, 11, 12, 10]
+            'columns'  : [0, 9, 11, 12, 10],
+            'rows'     : in_report_rows
           }
         });
 
@@ -180,8 +183,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
         });
 
         new google.visualization.Dashboard(document.getElementById('dashboard'))
-          .bind([reportPicker, statusPicker], [table, chart])
+          .bind([reportPicker, statusPicker], [table])
           .draw(data);
+          
+  		chart.draw();
       }
       jQuery(document).ready(function($) {
 		  $('.apply-bulk').click(function() {
