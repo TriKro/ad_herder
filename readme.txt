@@ -4,8 +4,8 @@ Contributors: pbackx, trikro
 Donate link: http://grasshopperherder.com/
 Tags: plugin, widget, automatic, ad, manage
 Requires at least: 3.0
-Tested up to: 3.2.1
-Stable tag: 1.2
+Tested up to: 3.4.1
+Stable tag: 1.3
 
 == Description ==
 
@@ -119,6 +119,13 @@ Want a nice button to do this more easily? Ask Tristan@grasshopperherder.com
 
 
 == Changelog ==
+
+= Version 1.3 =
+
+* Added confidence & relevance calculations for selected items
+* Now possible to customize the items that are in the report
+* Simplified managment & reporting interface
+* Bulk actions on ads (ctr-click to select multiple) 
 
 = Version 1.2 =
 
